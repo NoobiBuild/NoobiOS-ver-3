@@ -1,0 +1,2918 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>NoobiOS · Flow Tasks</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NoobiOS" />
+  <style>
+:root{
+  --bg:#0b1220;
+  --card:#0f1b33;
+  --text:#eef2ff;
+  --muted:#a9b4d0;
+  --line:rgba(255,255,255,.12);
+  --accent:#5eead4;
+  --accent2:#60a5fa;
+  --danger:#fb7185;
+  --ok:#4ade80;
+  --shadow: 0 14px 36px rgba(0,0,0,.45);
+  --r:18px;
+  --r2:24px;
+  --tap:48px;
+  --max:980px;
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--font);
+  background:
+    radial-gradient(1200px 500px at 20% -10%, rgba(94,234,212,.16), transparent 50%),
+    radial-gradient(900px 400px at 90% 10%, rgba(96,165,250,.14), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  padding-bottom: 86px;
+}
+a{color:inherit}
+code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+
+.skip-link{
+  position:absolute; left:-999px; top:8px;
+  background:#fff; color:#000;
+  padding:8px 10px; border-radius:10px;
+}
+.skip-link:focus{left:8px; z-index:9999}
+
+.hero{
+  position:sticky; top:0; z-index:30;
+  background: rgba(11,18,32,.78);
+  border-bottom:1px solid var(--line);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  overflow:hidden;
+}
+.hero__bg{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(11,18,32,.25), rgba(11,18,32,.85)),
+    url("./Noobi%20Banner.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.1) contrast(1.05);
+  opacity:.40;
+  pointer-events:none;
+}
+.hero__inner{
+  position:relative;
+  max-width:var(--max);
+  margin:0 auto;
+  padding: calc(env(safe-area-inset-top) + 10px) 14px 12px;
+}
+.brandrow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.brand{display:flex;flex-direction:column;gap:4px;min-width:0}
+.brand__title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand__name{font-weight:900;letter-spacing:.2px}
+.brand__pill{
+  font-size:11px;
+  padding:3px 10px;
+  border-radius:999px;
+  border:1px solid rgba(94,234,212,.35);
+  background: rgba(94,234,212,.08);
+  color: var(--accent);
+  font-weight:800;
+}
+.brand__sub{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand__avatar{
+  width:34px;height:34px;border-radius:50%;
+  object-fit:cover; border:2px solid rgba(94,234,212,.45);
+  box-shadow: 0 0 18px rgba(94,234,212,.12);
+}
+
+.iconbar{display:flex;gap:8px;align-items:center}
+.iconbtn{
+  width:var(--tap);height:var(--tap);
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.iconbtn:active{transform:scale(.97)}
+.icon{width:20px;height:20px;fill:currentColor}
+
+/* Inbox */
+.inbox{
+  margin-top:10px;
+  display:flex; gap:10px; align-items:center;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+}
+.inbox input{
+  flex:1; border:none; outline:none; background:transparent;
+  color:var(--text); font-size:16px; min-width:0;
+}
+.inbox input::placeholder{color:rgba(169,180,208,.8)}
+.pill{
+  height:36px; padding:0 14px; border-radius:999px;
+  border:1px solid rgba(94,234,212,.5);
+  background:rgba(94,234,212,.12);
+  color:var(--text); font-weight:900; font-size:13px;
+  cursor:pointer;
+}
+.pill--ghost{
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+}
+.pill:active{transform:scale(.98)}
+
+/* AI hint row */
+.ai-hint{
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(94,234,212,.25);
+  background: rgba(94,234,212,.06);
+}
+.ai-hint span{font-weight:900}
+
+/* Filterbar */
+.filterbar{
+  position:relative;
+  background: rgba(11,18,32,.86);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid var(--line);
+}
+.filterbar__inner{
+  max-width:var(--max);
+  margin:0 auto;
+  padding: 10px 14px 12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+.sel,.search{
+  height:38px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  padding:0 12px;
+  font-size:13px;
+  outline:none;
+}
+.sel option{color:#111;background:#eee}
+.search{flex:1;min-width:160px}
+
+/* Main */
+.main{max-width:var(--max);margin:0 auto;padding: 12px 14px}
+.summary{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:10px;
+  margin-top:4px;
+}
+.sumcard{
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  background: rgba(255,255,255,.04);
+  padding:12px 12px 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+}
+.sumcard .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.sumcard .val{font-size:22px;font-weight:900;margin-top:6px}
+.sumcard.has-danger .val{color:var(--danger)}
+
+.listHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:14px;
+}
+.listHead__title{font-weight:900;font-size:15px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.headActions{display:flex;gap:10px;align-items:center}
+
+.btn{
+  height:48px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  font-weight:900;
+  padding:0 16px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.btn:active{transform:scale(.98)}
+.btn.primary{
+  border-color: rgba(94,234,212,.55);
+  background: rgba(94,234,212,.14);
+}
+.btn.danger{
+  border-color: rgba(251,113,133,.5);
+  background: rgba(251,113,133,.10);
+}
+
+/* List / cards */
+.list{margin-top:10px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+.groupTitle{
+  margin:18px 0 8px;
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  display:flex;align-items:center;gap:8px;
+}
+.groupTitle::after{content:"";flex:1;height:1px;background:var(--line)}
+.card{
+  border:1px solid var(--line);
+  border-radius:var(--r2);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  padding:12px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;
+  background: var(--pill-c, rgba(255,255,255,.18));
+}
+.checkbox{
+  width:24px;height:24px;border-radius:8px;
+  border:1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;
+  margin-top:2px;cursor:pointer;flex:0 0 auto;
+}
+.checkbox.is-done{
+  border-color: rgba(94,234,212,.6);
+  background: rgba(94,234,212,.14);
+}
+.checkbox span{font-size:14px}
+
+.card__main{flex:1;min-width:0}
+.card__title{margin:0;font-weight:900;font-size:15px;line-height:1.25}
+.card__title.done{opacity:.55;text-decoration:line-through}
+.card__meta{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  font-size:12px;
+}
+.badge{
+  padding:3px 9px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  white-space:nowrap;
+}
+.badge.accent{
+  border-color: rgba(94,234,212,.35);
+  background: rgba(94,234,212,.10);
+  color: var(--text);
+}
+.badge.danger{
+  border-color: rgba(251,113,133,.45);
+  background: rgba(251,113,133,.12);
+  color: var(--text);
+}
+.badge.ok{
+  border-color: rgba(74,222,128,.35);
+  background: rgba(74,222,128,.10);
+  color: var(--text);
+}
+.notes{
+  margin-top:8px;
+  color: rgba(238,242,255,.85);
+  font-size:13px;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+
+/* Zen mode (single task) */
+.zen .filterbar,
+.zen .summary,
+.zen #pillarsDash{display:none !important;}
+.zen .grid{gap:14px}
+.zen .card{
+  padding:18px;
+  border-radius:28px;
+  background: rgba(255,255,255,.05);
+}
+.zen .card__title{font-size:18px}
+.zen .badge{display:none}
+
+/* Dashboard */
+.dash{margin-top:18px;display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:820px){.dash{grid-template-columns:1fr 1fr}}
+.dashCard{
+  border:1px solid var(--line);
+  border-radius:var(--r2);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  padding:14px;
+}
+.dashTitle{margin:0 0 10px;font-weight:900;font-size:14px}
+.dashRow{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  margin-top:8px;
+  cursor:pointer;
+}
+.kpis{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.kpi{
+  font-size:11px;padding:3px 8px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--text);
+}
+.kpi.danger{border-color:rgba(251,113,133,.4);color:var(--danger)}
+
+/* Recurring */
+.recurring{
+  margin-top:16px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:var(--r2);
+  background: rgba(255,255,255,.03);
+}
+.rule{
+  padding:10px 12px;border:1px solid var(--line);
+  border-radius:18px;background: rgba(255,255,255,.03);
+  display:flex;justify-content:space-between;gap:10px;
+  margin-top:10px;
+}
+.toggle{
+  min-width:52px;height:30px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);
+  padding:3px;cursor:pointer;display:flex;align-items:center;
+}
+.dot{width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.2);transition:transform .15s}
+.toggle.on{border-color:rgba(94,234,212,.55);background:rgba(94,234,212,.12)}
+.toggle.on .dot{background:var(--accent);transform:translateX(22px)}
+
+/* Bottom nav */
+.bottomnav{
+  position:fixed;left:0;right:0;bottom:0;
+  background: rgba(11,18,32,.88);
+  backdrop-filter: blur(14px);
+  border-top:1px solid var(--line);
+  padding: 8px 8px calc(10px + env(safe-area-inset-bottom));
+  z-index:40;
+}
+.bottomnav__inner{
+  max-width:var(--max);
+  margin:0 auto;
+  display:flex;
+  gap:2px;
+}
+.tab{
+  flex:1;
+  min-width:0;
+  border:1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  border-radius:12px;
+  padding:6px 2px 4px;
+  min-height:50px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:9.5px;
+}
+.tab svg{width:17px;height:17px;fill:currentColor}
+.tab.is-active{
+  color: var(--text);
+  border-color: rgba(94,234,212,.35);
+  background: rgba(94,234,212,.08);
+}
+
+/* FAB */
+.fab{
+  position:fixed;
+  right:16px;
+  bottom:calc(66px + 10px);
+  width:52px;height:52px;border-radius:18px;
+  border:1px solid rgba(94,234,212,.6);
+  background: rgba(94,234,212,.15);
+  color:var(--text);
+  box-shadow: 0 8px 24px rgba(94,234,212,.22), var(--shadow);
+  z-index:50;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.fab:active{transform:scale(.97)}
+
+/* Sheets */
+.overlay[hidden]{display:none}
+.overlay{position:fixed;inset:0;z-index:70}
+.backdrop{position:absolute;inset:0;background:rgba(0,0,0,.60)}
+.sheet{
+  position:absolute;left:0;right:0;bottom:0;
+  max-width:520px;margin:0 auto;
+  max-height:88vh;overflow:auto;
+  border-top-left-radius:26px;border-top-right-radius:26px;
+  border:1px solid var(--line);
+  background: rgba(10,18,38,.97);
+  box-shadow: var(--shadow);
+}
+.sheetHead{
+  position:sticky;top:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 14px 12px;
+  background: rgba(10,18,38,.99);
+  border-bottom:1px solid var(--line);
+}
+.sheetBody{padding:14px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field select,.field textarea{
+  padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  outline:none;
+  font-size:16px;
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btnrow{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.divider{height:1px;background:var(--line);margin:10px 0}
+.actionGrid{display:grid;grid-template-columns:1fr;gap:10px}
+.actionGrid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.toast[hidden]{display:none}
+.toast{
+  position:fixed;
+  left:12px;right:12px;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  max-width:520px;margin:0 auto;
+  padding:12px 16px;border-radius:18px;
+  background: rgba(10,18,38,.98);
+  border:1px solid var(--line);
+  box-shadow: var(--shadow);
+  z-index:90;
+  font-weight:900;
+}
+
+/* AI review */
+.ai-summary{
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(94,234,212,.25);
+  background: rgba(94,234,212,.06);
+  font-weight:900;
+}
+.ai-ops{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.ai-op{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background: rgba(255,255,255,.03);
+  padding:10px 12px;
+}
+.ai-op__top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.ai-op__kind{
+  font-size:11px;
+  padding:3px 8px;border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+/* More sheet */
+.moreBlock{padding:2px 2px 10px}
+.moreTitle{font-weight:900;margin:4px 0 10px}
+
+/* Mobile scrolling filters */
+@media (max-width: 600px){
+  .filterbar__inner{flex-wrap:nowrap;overflow-x:auto; -webkit-overflow-scrolling:touch}
+  .filterbar__inner::-webkit-scrollbar{display:none}
+  .sel{min-width:110px;flex-shrink:0}
+  .search{min-width:160px;flex-shrink:0}
+  .grid2{grid-template-columns:1fr}
+  .actionGrid2{grid-template-columns:1fr}
+}
+/* Checkline (checkbox + label inline) */
+.checkline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+.checkline input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+</style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="hero" role="banner">
+    <div class="hero__bg" aria-hidden="true"></div>
+
+    <div class="hero__inner">
+      <div class="brandrow">
+        <div class="brand">
+          <div class="brand__title">
+            <img class="brand__avatar" src="./Noobi%20Banner.jpg" alt="" onerror="this.style.display='none'">
+            <span class="brand__name">NoobiOS</span>
+            <span class="brand__pill">Flow Engine · Local-first</span>
+          </div>
+          <div id="metaLine" class="brand__sub">Loading…</div>
+        </div>
+
+        <div class="iconbar">
+          <button id="btnZen" class="iconbtn" aria-label="Toggle Zen mode" title="Zen mode">
+            <svg class="icon"><use href="#i-zen"></use></svg>
+          </button>
+
+          <button id="btnToggleFilters" class="iconbtn" aria-label="Toggle filters" title="Filters">
+            <svg class="icon"><use href="#i-filter"></use></svg>
+          </button>
+
+          <button id="btnMore" class="iconbtn" aria-label="More" title="More">
+            <svg class="icon"><use href="#i-more"></use></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Inbox capture -->
+      <div class="inbox" role="search">
+        <svg class="icon" aria-hidden="true"><use href="#i-inbox"></use></svg>
+        <input id="inboxInput" type="text" placeholder="Inbox… (type + Enter)" autocomplete="off" />
+        <button id="btnInboxAdd" class="pill" type="button">Add</button>
+      </div>
+
+      <!-- Micro AI hint row -->
+      <div id="aiHintRow" class="ai-hint" hidden>
+        <span id="aiHintText">AI ready.</span>
+        <button id="btnAiHintOpen" class="pill pill--ghost" type="button">Review</button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div id="filterbar" class="filterbar">
+      <div class="filterbar__inner">
+        <select id="filterPillar" class="sel" aria-label="Filter by pillar">
+          <option value="any">All Pillars</option>
+        </select>
+
+        <select id="filterOwner" class="sel" aria-label="Filter by owner">
+          <option value="any">All Owners</option>
+        </select>
+
+        <select id="filterMonth" class="sel" aria-label="Filter by month">
+          <option value="any">All Months</option>
+        </select>
+
+        <select id="filterStatus" class="sel" aria-label="Filter by status">
+          <option value="any">All Status</option>
+          <option value="open">Open</option>
+          <option value="completed">Completed</option>
+        </select>
+
+        <input id="searchInput" class="search" type="search" placeholder="Search title/notes…" />
+        <select id="sortBy" class="sel" aria-label="Sort">
+          <option value="due">Sort: Due</option>
+          <option value="start">Sort: Start</option>
+          <option value="priority">Sort: Priority</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="main" role="main">
+    <!-- Summary -->
+    <section id="summary" class="summary" aria-label="Summary">
+      <div class="sumcard">
+        <div class="lbl">Today</div>
+        <div id="sumToday" class="val">—</div>
+      </div>
+      <div class="sumcard">
+        <div class="lbl">This week</div>
+        <div id="sumWeek" class="val">—</div>
+      </div>
+      <div class="sumcard has-danger">
+        <div class="lbl">Overdue</div>
+        <div id="sumOverdue" class="val">—</div>
+      </div>
+    </section>
+
+    <!-- View header -->
+    <div class="listHead">
+      <div>
+        <div id="viewTitle" class="listHead__title">…</div>
+        <div id="storageInfo" class="muted small">—</div>
+      </div>
+
+      <div class="headActions">
+        <button id="btnRebalance" class="btn" type="button" title="Suggest a better Today plan">
+          <svg class="icon"><use href="#i-spark"></use></svg>
+          Rebalance
+        </button>
+
+        <button id="btnQuickAdd" class="btn primary" type="button">
+          <svg class="icon"><use href="#i-plus"></use></svg>
+          Quick Add
+        </button>
+      </div>
+    </div>
+
+    <!-- Recurring rules -->
+    <section id="recurringPanel" class="recurring" hidden aria-label="Recurring rules"></section>
+
+    <!-- Pillars dashboard (kept lightweight, appears AFTER tasks) -->
+    <section id="pillarsDash" class="dash" hidden aria-label="Pillars dashboard">
+      <div class="dashCard">
+        <h3 class="dashTitle">By Pillar</h3>
+        <div id="dashByPillar"></div>
+      </div>
+      <div class="dashCard">
+        <h3 class="dashTitle">By Owner</h3>
+        <div id="dashByOwner"></div>
+      </div>
+    </section>
+
+    <!-- Main list -->
+    <section class="list" aria-label="Task list">
+      <div id="list" class="grid"></div>
+    </section>
+  </main>
+
+  <!-- Bottom navigation -->
+  <nav class="bottomnav" aria-label="Bottom navigation">
+    <div class="bottomnav__inner">
+      <button class="tab is-active" data-view="today" aria-current="page">
+        <svg><use href="#i-sun"></use></svg><span>Today</span>
+      </button>
+      <button class="tab" data-view="week">
+        <svg><use href="#i-week"></use></svg><span>Week</span>
+      </button>
+      <button class="tab" data-view="month">
+        <svg><use href="#i-month"></use></svg><span>Month</span>
+      </button>
+      <button class="tab" data-view="upcoming">
+        <svg><use href="#i-up"></use></svg><span>Upcoming</span>
+      </button>
+      <button class="tab" data-view="completed">
+        <svg><use href="#i-check"></use></svg><span>Done</span>
+      </button>
+      <button class="tab" data-view="events">
+        <svg><use href="#i-star"></use></svg><span>Events</span>
+      </button>
+      <button class="tab" data-view="pillars">
+        <svg><use href="#i-grid"></use></svg><span>Pillars</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+  <!-- FAB -->
+  <button id="fab" class="fab" aria-label="Quick Add">
+    <svg><use href="#i-plus"></use></svg>
+  </button>
+
+  <!-- Quick Add sheet -->
+  <div id="quickAddSheet" class="overlay" hidden>
+    <div class="backdrop" data-close="quickAddSheet"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Quick add">
+      <div class="sheetHead">
+        <strong>Quick Add</strong>
+        <button class="iconbtn" data-close="quickAddSheet" aria-label="Close">
+          <svg class="icon"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="sheetBody">
+        <div class="field">
+          <label>Title</label>
+          <input id="qaTitle" type="text" placeholder="e.g. Prep community mining presentation…" />
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Type</label>
+            <select id="qaType">
+              <option value="task">Task</option>
+              <option value="meeting">Meeting</option>
+              <option value="event">Event</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Priority</label>
+            <select id="qaPriority">
+              <option value="1">P1</option>
+              <option value="2" selected>P2</option>
+              <option value="3">P3</option>
+              <option value="4">P4</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Start</label>
+            <input id="qaStart" type="date" />
+          </div>
+          <div class="field">
+            <label>Due</label>
+            <input id="qaDue" type="date" />
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Pillar</label>
+            <select id="qaPillar"></select>
+          </div>
+          <div class="field">
+            <label>Owner</label>
+            <select id="qaOwner"></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Notes</label>
+          <textarea id="qaNotes" rows="3" placeholder="Optional…"></textarea>
+        </div>
+
+        <label class="checkline">
+          <input id="qaAiRefine" type="checkbox" />
+          Let AI refine this after saving
+        </label>
+
+        <div class="btnrow">
+          <button class="btn" data-close="quickAddSheet" type="button">Cancel</button>
+          <button id="btnQaSave" class="btn primary" type="button">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit sheet -->
+  <div id="editSheet" class="overlay" hidden>
+    <div class="backdrop" data-close="editSheet"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Edit item">
+      <div class="sheetHead">
+        <strong>Edit</strong>
+        <button class="iconbtn" data-close="editSheet" aria-label="Close">
+          <svg class="icon"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="sheetBody">
+        <input id="editId" type="hidden" />
+
+        <div class="field">
+          <label>Title</label>
+          <input id="editTitle" type="text" />
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Type</label>
+            <select id="editType">
+              <option value="">(auto)</option>
+              <option value="task">Task</option>
+              <option value="meeting">Meeting</option>
+              <option value="event">Event</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Priority</label>
+            <select id="editPriority">
+              <option value="">(auto)</option>
+              <option value="1">P1</option>
+              <option value="2">P2</option>
+              <option value="3">P3</option>
+              <option value="4">P4</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Start</label>
+            <input id="editStart" type="date" />
+          </div>
+          <div class="field">
+            <label>Due</label>
+            <input id="editDue" type="date" />
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Pillar</label>
+            <select id="editPillar"></select>
+          </div>
+          <div class="field">
+            <label>Owner</label>
+            <select id="editOwner"></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Notes</label>
+          <textarea id="editNotes" rows="4"></textarea>
+        </div>
+
+        <div class="actionGrid2">
+          <button id="btnEditAiRefine" class="btn" type="button">
+            <svg class="icon"><use href="#i-spark"></use></svg>
+            AI refine
+          </button>
+          <button id="btnEditMoveToday" class="btn" type="button">Move to Today</button>
+        </div>
+
+        <div class="btnrow">
+          <button id="btnDelete" class="btn danger" type="button">Delete</button>
+          <button class="btn" data-close="editSheet" type="button">Cancel</button>
+          <button id="btnEditSave" class="btn primary" type="button">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action sheet (long-press) -->
+  <div id="actionSheet" class="overlay" hidden>
+    <div class="backdrop" data-close="actionSheet"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Quick actions">
+      <div class="sheetHead">
+        <strong>Quick actions</strong>
+        <button class="iconbtn" data-close="actionSheet" aria-label="Close">
+          <svg class="icon"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="sheetBody">
+        <div class="muted small" id="actionTitle">—</div>
+        <div class="divider"></div>
+
+        <div class="actionGrid">
+          <button id="btnActionComplete" class="btn primary" type="button">Complete / Undo</button>
+          <button id="btnActionEdit" class="btn" type="button">Edit</button>
+          <button id="btnActionToday" class="btn" type="button">Move to Today</button>
+          <button id="btnActionDefer" class="btn" type="button">Defer 1 day</button>
+          <button id="btnActionAiRefine" class="btn" type="button">
+            <svg class="icon"><use href="#i-spark"></use></svg>
+            AI refine
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Review sheet (appears, then disappears) -->
+  <div id="aiReviewSheet" class="overlay" hidden>
+    <div class="backdrop" data-close="aiReviewSheet"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="AI suggestions">
+      <div class="sheetHead">
+        <strong>AI Suggestions</strong>
+        <button class="iconbtn" data-close="aiReviewSheet" aria-label="Close">
+          <svg class="icon"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="sheetBody">
+        <div id="aiReviewSummary" class="ai-summary">—</div>
+        <div id="aiOpsList" class="ai-ops"></div>
+
+        <div class="btnrow">
+          <button id="btnAiDiscard" class="btn" type="button">Discard</button>
+          <button id="btnAiApply" class="btn primary" type="button">Apply</button>
+        </div>
+
+        <div class="muted small" style="margin-top:10px">
+          Nothing changes until you Apply. All changes are stored as overlays.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- More sheet -->
+  <div id="moreSheet" class="overlay" hidden>
+    <div class="backdrop" data-close="moreSheet"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="More options">
+      <div class="sheetHead">
+        <strong>More</strong>
+        <button class="iconbtn" data-close="moreSheet" aria-label="Close">
+          <svg class="icon"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="sheetBody">
+        <div class="moreBlock">
+          <div class="moreTitle">AI Engine</div>
+
+          <label class="checkline">
+            <input id="aiEnabled" type="checkbox" />
+            Enable AI engine
+          </label>
+
+          <label class="checkline">
+            <input id="aiAutoRefine" type="checkbox" />
+            Auto-refine on new tasks
+          </label>
+
+          <div class="grid2">
+            <div class="field">
+              <label>Provider</label>
+              <select id="aiProvider">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="gemini">Google Gemini</option>
+                <option value="openai_compat">OpenAI-compatible (local/server)</option>
+                <option value="custom">Custom endpoint</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Model</label>
+              <input id="aiModel" type="text" placeholder="e.g. gpt-4o-mini / claude / gemini" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Endpoint (optional)</label>
+            <input id="aiEndpoint" type="text" placeholder="Leave blank for provider default" />
+          </div>
+
+          <div class="field">
+            <label>API Key</label>
+            <input id="aiKey" type="password" placeholder="Stored locally if you enable Remember" />
+          </div>
+
+          <label class="checkline">
+            <input id="aiRememberKey" type="checkbox" />
+            Remember key on this device
+          </label>
+
+          <div class="field">
+            <label>Custom Headers (JSON, optional)</label>
+            <textarea id="aiHeaders" rows="3" placeholder='{"Authorization":"Bearer {{KEY}}"}'></textarea>
+          </div>
+
+          <div class="actionGrid2">
+            <button id="btnAiSaveSettings" class="btn" type="button">Save AI settings</button>
+            <button id="btnAiClearSettings" class="btn danger" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <button id="btnExportOverlays" class="btn" type="button">Download overrides.json</button>
+        <button id="btnImportOverlays" class="btn" type="button">Import overrides.json</button>
+        <button id="btnBackupMerged" class="btn" type="button">Backup merged.json</button>
+
+        <div class="divider"></div>
+        <button id="btnResetOverlays" class="btn danger" type="button">Reset local overlays</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18v2l-7 7v5l-4 2v-7L3 7V5z"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><path d="M12 7a2 2 0 110-4 2 2 0 010 4zm0 7a2 2 0 110-4 2 2 0 010 4zm0 7a2 2 0 110-4 2 2 0 010 4z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M11 5h2v14h-2z"/><path d="M5 11h14v2H5z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18.3 5.7l-1.4-1.4L12 9.2 7.1 4.3 5.7 5.7 10.6 10.6 5.7 15.5l1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9 4.9-4.9z"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm0 14h-3a3 3 0 01-6 0H5V5h14v12z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><path d="M12 6a6 6 0 100 12 6 6 0 000-12z"/></symbol>
+    <symbol id="i-week" viewBox="0 0 24 24"><path d="M7 2h2v2H7V2zm8 0h2v2h-2V2zM4 5h16a2 2 0 012 2v13a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2zm0 5h16v10H4V10z"/></symbol>
+    <symbol id="i-month" viewBox="0 0 24 24"><path d="M7 2h2v2H7V2zm8 0h2v2h-2V2zM4 5h16a2 2 0 012 2v13a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2zm0 4h16V7H4v2z"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 2l6 6h-4v6h-4V8H6l6-6zm-8 18h16v2H4v-2z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.3l-6.2 3.7 1.6-7.1L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.4 4.7 1.6 7.1z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l1.5 6L20 10l-6.5 2L12 18l-1.5-6L4 10l6.5-2L12 2z"/></symbol>
+    <symbol id="i-zen" viewBox="0 0 24 24"><path d="M12 2C7 2 3 6 3 11c0 6 6 11 9 11s9-5 9-11c0-5-4-9-9-9zm0 18c-2.8 0-7-4.3-7-9 0-3.9 3.1-7 7-7s7 3.1 7 7c0 4.7-4.2 9-7 9z"/></symbol>
+  </svg>
+
+  <script type="module">
+
+// === AI Providers ===
+const AI_SETTINGS_KEY = "noobi_ai_settings_v2";
+
+function defaultAiSettings() {
+  return {
+    enabled: false,
+    autoRefine: false,
+    provider: "openai",
+    model: "",
+    endpoint: "",
+    headersJson: "",
+    rememberKey: false,
+    apiKey: ""
+  };
+}
+
+function loadAiSettings() {
+  try {
+    const raw = localStorage.getItem(AI_SETTINGS_KEY);
+    if (!raw) return defaultAiSettings();
+    const obj = JSON.parse(raw);
+    return { ...defaultAiSettings(), ...obj };
+  } catch {
+    return defaultAiSettings();
+  }
+}
+
+function saveAiSettings(s) {
+  localStorage.setItem(AI_SETTINGS_KEY, JSON.stringify({ ...defaultAiSettings(), ...s }));
+}
+
+function clearAiSettings() {
+  localStorage.removeItem(AI_SETTINGS_KEY);
+}
+
+function getAiReadyState() {
+  const s = loadAiSettings();
+  if (!s.enabled) return { enabled: false, ready: false, reason: "disabled" };
+  if (s.provider === "openai_compat") return { enabled: true, ready: true, reason: "local_compat_ok" };
+  if (!s.apiKey && !s.rememberKey) return { enabled: true, ready: false, reason: "missing_key" };
+  if (s.rememberKey && !s.apiKey) return { enabled: true, ready: false, reason: "missing_key" };
+  return { enabled: true, ready: true, reason: "ok" };
+}
+
+function replaceKeyPlaceholders(headersJson, key) {
+  if (!headersJson) return {};
+  try {
+    return JSON.parse(headersJson.replaceAll("{{KEY}}", key));
+  } catch {
+    return {};
+  }
+}
+
+async function aiCall({ provider, model, endpoint, apiKey, headersJson }, system, user, contextObj) {
+  const key = apiKey || "";
+  const extraHeaders = replaceKeyPlaceholders(headersJson, key);
+  const ctxStr = JSON.stringify(contextObj);
+
+  if (provider === "openai") {
+    const url = endpoint || "https://api.openai.com/v1/chat/completions";
+    const body = {
+      model: model || "gpt-4o-mini",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: `CONTEXT:\n${ctxStr}\n\nREQUEST:\n${user}` }
+      ],
+      temperature: 0.2
+    };
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}`, ...extraHeaders },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error?.message || `OpenAI error (${res.status})`);
+    return json?.choices?.[0]?.message?.content ?? "";
+  }
+
+  if (provider === "anthropic") {
+    const url = endpoint || "https://api.anthropic.com/v1/messages";
+    const body = {
+      model: model || "claude-3-5-sonnet-20240620",
+      max_tokens: 1200,
+      temperature: 0.2,
+      system,
+      messages: [{ role: "user", content: `CONTEXT:\n${ctxStr}\n\nREQUEST:\n${user}` }]
+    };
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        ...extraHeaders
+      },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error?.message || `Anthropic error (${res.status})`);
+    return (json?.content || []).map(x => x?.text || "").join("\n");
+  }
+
+  if (provider === "gemini") {
+    const m = model || "gemini-1.5-flash";
+    const url = endpoint
+      || `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent?key=${encodeURIComponent(key)}`;
+
+    const body = {
+      contents: [
+        { role: "user", parts: [{ text: `${system}\n\nCONTEXT:\n${ctxStr}\n\nREQUEST:\n${user}` }] }
+      ],
+      generationConfig: { temperature: 0.2 }
+    };
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...extraHeaders },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error?.message || `Gemini error (${res.status})`);
+    return json?.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("\n") || "";
+  }
+
+  if (provider === "openai_compat") {
+    const url = endpoint || "http://localhost:11434/v1/chat/completions";
+    const body = {
+      model: model || "llama3.1",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: `CONTEXT:\n${ctxStr}\n\nREQUEST:\n${user}` }
+      ],
+      temperature: 0.2
+    };
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...(key ? { "Authorization": `Bearer ${key}` } : {}), ...extraHeaders },
+      body: JSON.stringify(body)
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error?.message || `OpenAI-compatible error (${res.status})`);
+    return json?.choices?.[0]?.message?.content ?? "";
+  }
+
+  if (provider === "custom") {
+    if (!endpoint) throw new Error("Custom provider needs an endpoint URL");
+    const body = { system, user, context: contextObj, model };
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...extraHeaders },
+      body: JSON.stringify(body)
+    });
+    const txt = await res.text();
+    if (!res.ok) throw new Error(`Custom error (${res.status})`);
+    try {
+      const j = JSON.parse(txt);
+      return j.text || j.output || txt;
+    } catch {
+      return txt;
+    }
+  }
+
+  throw new Error("Unsupported provider");
+}
+
+function tryParseJsonFromText(txt) {
+  const direct = txt.trim();
+  if (direct.startsWith("{") && direct.endsWith("}")) {
+    try { return JSON.parse(direct); } catch {}
+  }
+  const m = txt.match(/\{[\s\S]*\}/);
+  if (m) {
+    try { return JSON.parse(m[0]); } catch {}
+  }
+  return null;
+}
+
+// === AI Context ===
+// Builds a compact context bundle for the AI.
+// Future hook: load local reference docs (workplans/budgets/playbooks) via fetch if present.
+
+function normalizeType(t) {
+  const v = (t || "").toLowerCase().trim();
+  if (!v) return "task";
+  if (v === "event" || v === "meeting" || v === "task") return v;
+  return "task";
+}
+function isCompleted(overlays, item) {
+  const patch = overlays?.task_overrides?.[item.id] || {};
+  const status = patch.status || item.status || "";
+  return status === "completed";
+}
+
+async function tryLoadReference() {
+  // Optional file: ./ai/reference.json
+  // User can later drop in AS&T GPT playbook/workplans/budgets as structured JSON.
+  try {
+    const res = await fetch("./ai/reference.json", { cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json;
+  } catch {
+    return null;
+  }
+}
+
+async function buildAiContext(merged, overlays, { origin = "unknown" } = {}) {
+  const tasks = Array.isArray(merged?.tasks) ? merged.tasks : [];
+  const events = Array.isArray(merged?.events) ? merged.events : [];
+  const learning = overlays?.learning || {};
+
+  const pick = (x) => ({
+    id: x.id,
+    title: x.title || "",
+    pillar: x.pillar || "",
+    owner_id: x.owner_id || "",
+    start_date: x.start_date || null,
+    due_date: x.due_date || null,
+    priority: x.priority ?? null,
+    type: normalizeType(x.type),
+    status: isCompleted(overlays, x) ? "completed" : "open",
+    notes: (x.notes || "").slice(0, 220)
+  });
+
+  const open = tasks.filter(t => !isCompleted(overlays, t)).slice(0, 220).map(pick);
+  const doneRecent = tasks.filter(t => isCompleted(overlays, t)).slice(0, 60).map(pick);
+  const evOpen = events.filter(e => !isCompleted(overlays, e)).slice(0, 60).map(pick);
+
+  const reference = await tryLoadReference();
+
+  return {
+    origin,
+    open_tasks: open,
+    recent_completed: doneRecent,
+    open_events: evOpen,
+    learning: {
+      stats: learning.stats || {},
+      completion_log_tail: (learning.completion_log || []).slice(-60),
+      move_log_tail: (learning.move_log || []).slice(-60)
+    },
+    reference // optional: playbooks/workplans/budgets
+  };
+}
+
+// === AI Prompts ===
+function opsSchemaInstruction() {
+  return `
+Return ONLY valid JSON with this exact shape:
+{
+  "summary": "one short sentence",
+  "ops": [
+    {
+      "op": "add" | "update" | "complete" | "undo_complete" | "delete",
+      "id": "existing-id-or-temp-id",
+      "fields": { ... },      // add/update only
+      "reason": "short reason"
+    }
+  ]
+}
+
+Rules:
+- Prefer small, high-quality changes.
+- For "add": fields must include at least { "title": "...", "type": "task|meeting|event" }.
+- For "update": include ONLY changed fields.
+- Dates must be YYYY-MM-DD or null.
+- priority if provided must be 1-4.
+- You may include fields like: pillar, owner_id, notes, start_date, due_date, priority, estimated_minutes, energy, subtasks[].
+- subtasks: array of short strings.
+`;
+}
+
+function refineTaskPrompt(task) {
+  return `
+Refine this task so it is clearer and more actionable. If it looks like multiple tasks, you may propose multiple adds.
+Task:
+${JSON.stringify(task, null, 2)}
+
+Goals:
+- Clean title (short + specific)
+- Infer missing fields if safe (pillar/owner/priority/dates)
+- Suggest subtasks if helpful
+- Keep user intent (do not invent unrelated work)
+
+Return ops JSON only.
+`;
+}
+
+function rebalanceTodayPrompt(todayISO) {
+  return `
+Suggest a better "Today" plan. You may:
+- Move some tasks to today (update start_date/due_date to ${todayISO})
+- Defer low-priority items (push by 1-3 days)
+- Leave critical items for today
+Be conservative and propose small changes.
+
+Return ops JSON only.
+`;
+}
+
+// === AI Engine ===
+
+
+function validatePayload(payload) {
+  if (!payload || typeof payload !== "object") return { ok: false, error: "Not an object" };
+  if (!Array.isArray(payload.ops)) return { ok: false, error: "Missing ops[]" };
+  const allowed = new Set(["add","update","complete","undo_complete","delete"]);
+  for (const op of payload.ops) {
+    if (!op || typeof op !== "object") return { ok: false, error: "Bad op object" };
+    if (!allowed.has(op.op)) return { ok: false, error: `Unsupported op: ${op.op}` };
+    if (!op.id || typeof op.id !== "string") return { ok: false, error: "Op missing id" };
+    if ((op.op === "add" || op.op === "update") && (!op.fields || typeof op.fields !== "object")) {
+      return { ok: false, error: "add/update must include fields{}" };
+    }
+  }
+  return { ok: true };
+}
+
+async function runOps(system, user, context) {
+  const settings = loadAiSettings();
+  if (!settings.enabled) throw new Error("AI disabled");
+
+  const txt = await aiCall(settings, system, user, context);
+  const payload = tryParseJsonFromText(txt);
+  if (!payload) throw new Error("AI did not return valid JSON");
+  const v = validatePayload(payload);
+  if (!v.ok) throw new Error(`AI payload invalid: ${v.error}`);
+  return payload;
+}
+
+async function runRefineTask({ task, context }) {
+  const system = opsSchemaInstruction();
+  const user = refineTaskPrompt(task);
+  return await runOps(system, user, context);
+}
+
+async function runRebalanceToday({ todayISO, tasks, context }) {
+  const system = opsSchemaInstruction();
+  const user = `${rebalanceTodayPrompt(todayISO)}\n\nTasks snapshot:\n${JSON.stringify(tasks.slice(0, 120), null, 2)}`;
+  return await runOps(system, user, context);
+}
+
+// === App Main ===
+
+import {
+  loadAiSettings,
+  saveAiSettings,
+  clearAiSettings,
+  getAiReadyState
+} from "./ai/providers.js";
+
+const STORAGE_KEY = "ast_task_overrides_v1";
+const OVERLAYS_VERSION = 1;
+
+/* ---------- Utilities ---------- */
+function todayLocalISO() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function parseISODate(s) {
+  if (!s || typeof s !== "string") return null;
+  const [y, m, d] = s.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d, 12, 0, 0, 0);
+}
+function isoFromDate(dateObj) {
+  if (!dateObj) return "";
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const d = String(dateObj.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+function startOfWeek(d) {
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  date.setDate(date.getDate() + diff);
+  date.setHours(12, 0, 0, 0);
+  return date;
+}
+function endOfWeek(d) {
+  const s = startOfWeek(d);
+  const e = new Date(s);
+  e.setDate(e.getDate() + 6);
+  e.setHours(12, 0, 0, 0);
+  return e;
+}
+function startOfMonth(d) {
+  return new Date(d.getFullYear(), d.getMonth(), 1, 12, 0, 0, 0);
+}
+function endOfMonth(d) {
+  return new Date(d.getFullYear(), d.getMonth() + 1, 0, 12, 0, 0, 0);
+}
+function safeText(s) {
+  return (s ?? "").toString();
+}
+function uniq(arr) {
+  return Array.from(new Set(arr));
+}
+function normalizeType(t) {
+  const v = (t || "").toLowerCase().trim();
+  if (!v) return "";
+  if (v === "event" || v === "meeting" || v === "task") return v;
+  return v;
+}
+function priorityNum(p) {
+  if (typeof p === 'string') {
+    const map = {high:1, critical:1, p1:1, medium:2, normal:2, p2:2, low:3, p3:3, minimal:4, p4:4};
+    const mapped = map[p.toLowerCase().trim()];
+    if (mapped) return mapped;
+  }
+  const n = Number(p);
+  if (!Number.isFinite(n)) return 999;
+  return n;
+}
+function dlFile(filename, content, mime = "application/json") {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.hidden = false;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => (el.hidden = true), 2200);
+}
+
+/* ---------- Overlays ---------- */
+function defaultOverlays() {
+  return {
+    version: OVERLAYS_VERSION,
+    updated_at: new Date().toISOString(),
+    deletions: [],
+    task_overrides: {},
+    new_tasks: [],
+    recurrence_overrides: {},
+    learning: {
+      completion_log: [],
+      move_log: [],
+      stats: { moves: 0, completes: 0 }
+    }
+  };
+}
+function loadOverlays() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultOverlays();
+    const obj = JSON.parse(raw);
+    return {
+      ...defaultOverlays(),
+      ...obj,
+      deletions: Array.isArray(obj.deletions) ? obj.deletions : [],
+      new_tasks: Array.isArray(obj.new_tasks) ? obj.new_tasks : [],
+      task_overrides:
+        obj.task_overrides && typeof obj.task_overrides === "object"
+          ? obj.task_overrides
+          : {},
+      recurrence_overrides:
+        obj.recurrence_overrides && typeof obj.recurrence_overrides === "object"
+          ? obj.recurrence_overrides
+          : {},
+      learning:
+        obj.learning && typeof obj.learning === "object"
+          ? { ...defaultOverlays().learning, ...obj.learning }
+          : defaultOverlays().learning
+    };
+  } catch {
+    return defaultOverlays();
+  }
+}
+function saveOverlays(overlays) {
+  overlays.updated_at = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(overlays));
+  updateStorageInfo(overlays);
+}
+
+/* ---------- Merge ---------- */
+function mergeData(base, overlays) {
+  const baseTasks = Array.isArray(base.tasks) ? base.tasks : [];
+  const baseEvents = Array.isArray(base.events) ? base.events : [];
+  const recRules = Array.isArray(base.recurrence_rules) ? base.recurrence_rules : [];
+
+  const deletions = new Set(overlays.deletions || []);
+  const overrides = overlays.task_overrides || {};
+  const newTasks = overlays.new_tasks || [];
+
+  let tasks = baseTasks.filter((t) => t && t.id && !deletions.has(t.id));
+  let events = baseEvents.filter((e) => e && e.id && !deletions.has(e.id));
+
+  tasks = tasks.map((t) => (overrides[t.id] ? { ...t, ...overrides[t.id] } : t));
+  events = events.map((e) => (overrides[e.id] ? { ...e, ...overrides[e.id] } : e));
+
+  const appended = [];
+  for (const nt of newTasks) {
+    if (!nt || !nt.id) continue;
+    if (deletions.has(nt.id)) continue;
+    appended.push(nt);
+  }
+  tasks = tasks.concat(appended);
+
+  return { ...base, tasks, events, recurrence_rules: recRules, __overlays: overlays };
+}
+
+/* ---------- State ---------- */
+const state = {
+  base: null,
+  overlays: loadOverlays(),
+  merged: null,
+  view: "today",
+  zen: false,
+  actionId: null,
+  pendingAiPayload: null, // {summary, ops[]}
+  filters: {
+    pillar: "any",
+    owner_id: "any",
+    month: "any",
+    status: "any",
+    q: ""
+  },
+  sort: "due"
+};
+
+/* ---------- Base truth fetch ---------- */
+async function loadBase() {
+  // Data is bundled inline — no fetch needed
+  return {"meta": {"version": "2026.02.24-02", "last_updated": "2026-02-24", "timezone": "Africa/Johannesburg", "structure": "pillars: RR, ALUM, TRAIN, OPS, STRAT, BUD", "clusters": {"A": "R&R: Strategy \u2192 Budget \u2192 Venue \u2192 Curriculum \u2192 Selection \u2192 Delivery \u2192 M&E \u2192 Alumni \u2192 Impact \u2192 Fundraising", "B": "Ask Karabo: Comms \u2192 Website \u2192 Roadshow \u2192 Youth workshops \u2192 Guide publication \u2192 Portal integration", "C": "Law Reform: Monitoring \u2192 Issue ID \u2192 Guide \u2192 Mobilisation \u2192 Parliamentary submission \u2192 Media", "D": "Donor Compliance: Activity implementation \u2192 Data collection \u2192 Financial reconciliation \u2192 Narrative report \u2192 Board submission"}}, "owners": [{"owner_id": "MK", "name": "Programme Head"}, {"owner_id": "FS", "name": "Fadia (Admin & M&E)"}, {"owner_id": "TN", "name": "Thami (Coordinator)"}, {"owner_id": "TAT", "name": "Tatenda (Attorney)"}, {"owner_id": "DAN", "name": "Dani (Senior Attorney)"}, {"owner_id": "TG", "name": "TG (Senior Attorney)"}], "recurrence_rules": [{"id": "REC-001", "title": "Weekly AS&T Check-in", "pillar": "OPS", "owner_id": "MK", "frequency": "WEEKLY", "day_of_week": "MONDAY", "notes": "Internal coordination meeting \u2014 all team. Virtual unless noted."}, {"id": "REC-002", "title": "Bi-Weekly Leadership Development 1:1s", "pillar": "STRAT", "owner_id": "MK", "frequency": "BIWEEKLY", "day_of_week": "TUESDAY", "notes": "Protected leadership development sessions. No operational bookings."}, {"id": "REC-003", "title": "Monthly Programme Review", "pillar": "STRAT", "owner_id": "MK", "frequency": "MONTHLY", "notes": "Review pillar progress, risks, delegation."}, {"id": "REC-004", "title": "Monthly Budget Monitoring Check", "pillar": "BUD", "owner_id": "MK", "frequency": "MONTHLY", "notes": "Review burn rate vs AS&T FY27 sheet. Flag variances above 10%."}, {"id": "REC-005", "title": "Bi-Weekly Team Coordination Meeting", "pillar": "OPS", "owner_id": "FS", "frequency": "BIWEEKLY", "day_of_week": "WEDNESDAY", "notes": "Coordinated by Fadia. Agenda template shared in advance. Action items tracked."}, {"id": "REC-006", "title": "Monthly R&R Alumni Stipend Processing", "pillar": "RR", "owner_id": "TN", "frequency": "MONTHLY", "notes": "Process monthly data/airtime stipends for R&R alumni network leadership."}], "tasks": [{"id": "RR-001", "title": "Define R&R 2026 Theme & Strategic Framework", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["TN", "DAN"], "start_date": "2026-03-01", "due_date": "2026-03-14", "dependencies": [], "cluster": "A", "donor": {"stream": "RR", "notes": "HHCT primary; 11th Hour aligned."}, "notes": "Set 2026 course theme: Movement Building in the Age of State Clampdown. Inform curriculum, facilitator recruitment, and comms tone.", "type": "task", "priority": 1}, {"id": "RR-002", "title": "Confirm R&R 2026 Budget & Donor Ceiling", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-03-10", "due_date": "2026-03-20", "dependencies": ["RR-001"], "cluster": "A", "donor": {"stream": "RR", "notes": "HHCT MOU ceiling applies. Cross-reference DONOR_RR_Budget."}, "notes": "Finalise per-participant cost model. Confirm 11th Hour $30k allocation is ring-fenced. Budget lines: accommodation, flights, venue, catering, facilitator fees.", "type": "task", "priority": 1}, {"id": "RR-003", "title": "Procure Venue for R&R 2026 Course", "pillar": "RR", "owner_id": "TN", "support_owner_ids": ["FS"], "start_date": "2026-03-20", "due_date": "2026-05-30", "dependencies": ["RR-002"], "cluster": "A", "donor": {"stream": "RR", "notes": "Comparative quotations required per DONOR_RR MOU procurement policy."}, "notes": "Obtain minimum 3 quotes. Venue must accommodate ~30 participants residential, 28 Sep \u2013 16 Oct 2026. Catering included.", "type": "task", "priority": 1}, {"id": "RR-004", "title": "Update R&R Curriculum & Facilitator Pack", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["DAN", "TAT", "TG"], "start_date": "2026-04-01", "due_date": "2026-08-15", "dependencies": ["RR-001"], "cluster": "A", "donor": {"stream": "RR", "notes": "Curriculum refresh must reflect 2026 theme."}, "notes": "Update modules: anti-SLAPP, NDC accountability, mine blasting jurisprudence, wellness for activists. Brief all facilitators by end of August.", "type": "task", "priority": 1}, {"id": "RR-005", "title": "Publish R&R 2026 Call for Nominations", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["TN", "FS", "TAT"], "start_date": "2026-03-15", "due_date": "2026-03-31", "dependencies": ["RR-001"], "cluster": "A", "donor": {"stream": "RR", "notes": "Aligned to HHCT Outcome 2 relaunch objective."}, "notes": "Publish call via CER website, alumni network, partner organisations. Coordinate with Ask Karabo comms for social media push.", "type": "task", "priority": 1}, {"id": "RR-006", "title": "Design R&R Participant Selection Framework", "pillar": "RR", "owner_id": "TN", "support_owner_ids": ["MK"], "start_date": "2026-03-15", "due_date": "2026-04-15", "dependencies": ["RR-005"], "cluster": "A", "donor": {"stream": "RR", "notes": "Must align with donor diversity and inclusion outcomes."}, "notes": "Develop scoring rubric. Prioritise women, marginalised communities, extractive-affected areas. Document for donor reporting.", "type": "task", "priority": 2}, {"id": "RR-007", "title": "Shortlist & Confirm R&R 2026 Participants", "pillar": "RR", "owner_id": "TN", "support_owner_ids": ["MK", "DAN"], "start_date": "2026-06-01", "due_date": "2026-07-31", "dependencies": ["RR-006"], "cluster": "A", "donor": {"stream": "RR", "notes": "Selection must be documented for donor reporting."}, "notes": "Shortlist ~30 activists. Send confirmation letters, travel briefing packs and pre-reading. Confirm dietary & accessibility needs.", "type": "task", "priority": 2}, {"id": "RR-008", "title": "Deliver R&R 2026 Course", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["TN", "TAT", "DAN", "TG", "FS"], "start_date": "2026-09-28", "due_date": "2026-10-16", "dependencies": ["RR-003", "RR-004", "RR-007"], "cluster": "A", "donor": {"stream": "RR", "notes": "Core HHCT funded flagship. 11th Hour $30k supports this event."}, "notes": "3-week residential Rights & Remedies course. Theme: Movement Building in the Age of State Clampdown. All staff on deck. Daily M&E check-ins.", "type": "event", "priority": 1}, {"id": "RR-009", "title": "Finalise M&E Framework for R&R 2025 Cohort", "pillar": "RR", "owner_id": "FS", "support_owner_ids": ["TN", "MK"], "start_date": "2026-03-01", "due_date": "2026-03-31", "dependencies": [], "cluster": "A", "donor": {"stream": "RR", "notes": "Required for HHCT impact reporting."}, "notes": "Develop tracking templates for 2025 cohort project action plan implementation. Deploy survey tool for 6-month post-course check-in.", "type": "task", "priority": 2}, {"id": "RR-010", "title": "Community Visit 1 \u2014 Eastern Cape Teach Back", "pillar": "RR", "owner_id": "TN", "support_owner_ids": ["TAT", "FS", "MK"], "start_date": "2026-03-01", "due_date": "2026-03-31", "dependencies": ["RR-009"], "cluster": "A", "donor": {"stream": "RR", "notes": "Community visits documented for HHCT Outcome 1 reporting."}, "notes": "Visit R&R 2025 cohort in Eastern Cape. Teach-back session, review project action plan progress, collect M&E data.", "type": "event", "priority": 2}, {"id": "RR-011", "title": "Community Visit 2 \u2014 Gauteng Teach Back", "pillar": "RR", "owner_id": "TN", "support_owner_ids": ["TAT", "MK"], "start_date": "2026-04-01", "due_date": "2026-04-30", "dependencies": ["RR-010"], "cluster": "A", "donor": {"stream": "RR", "notes": "HHCT Outcome 1 reporting."}, "notes": "Visit Gauteng-based R&R 2025 cohort. Peer exchange workshop. Document implementation progress and challenges.", "type": "event", "priority": 2}, {"id": "RR-012", "title": "Community Visit 3 \u2014 Port Nolloth Teach Back", "pillar": "RR", "owner_id": "TN", "support_owner_ids": ["DAN", "FS"], "start_date": "2026-06-01", "due_date": "2026-06-30", "dependencies": ["RR-011"], "cluster": "A", "donor": {"stream": "RR", "notes": "Third of three planned community visits."}, "notes": "Visit Port Nolloth site. Peer exchange, project action plan review.", "type": "event", "priority": 2}, {"id": "RR-013", "title": "Analyse 5+ Years of R&R Alumni Data", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["FS", "TN"], "start_date": "2026-03-01", "due_date": "2026-04-30", "dependencies": ["RR-009"], "cluster": "A", "donor": {"stream": "RR", "notes": "Feeds into impact report required by HHCT."}, "notes": "Pull together 5+ years of alumni data. Analyse trajectories: legal wins, movement roles, organisational growth. Draft visualisations for impact report.", "type": "task", "priority": 2}, {"id": "RR-014", "title": "Draft & Publish R&R Alumni Impact Report", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["TN", "DAN", "FS"], "start_date": "2026-05-01", "due_date": "2026-07-31", "dependencies": ["RR-013", "RR-012"], "cluster": "A", "donor": {"stream": "RR", "notes": "Public-facing report required for HHCT Year 3 reporting."}, "notes": "Commission designer. Include alumni case studies, data visualisations, testimonials. Publish on CER website and R&R microsite.", "type": "task", "priority": 2}, {"id": "RR-015", "title": "Develop 2027\u20132030 R&R Fundraising Strategy", "pillar": "RR", "owner_id": "MK", "support_owner_ids": ["TN"], "start_date": "2026-08-01", "due_date": "2026-11-30", "dependencies": ["RR-014"], "cluster": "A", "donor": {"stream": "RR", "notes": "Align to HHCT multi-year structure."}, "notes": "Define R&R 2027-2030 vision. Map funding landscape. Draft theory of change for next phase. Propose scale model.", "type": "task", "priority": 2}, {"id": "AK-001", "title": "Finalise Ask Karabo Communications Strategy", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["TG", "MK"], "start_date": "2026-02-24", "due_date": "2026-03-15", "dependencies": [], "cluster": "B", "donor": {"stream": "AK", "notes": "Campaign comms budget line."}, "notes": "Finalise comms plan: demo videos, dissemination strategy, website update roadmap. Align with Portal team on messaging consistency.", "type": "task", "priority": 1}, {"id": "AK-002", "title": "Launch Ask Karabo Website Phase 2", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["TG", "FS"], "start_date": "2026-03-01", "due_date": "2026-04-30", "dependencies": ["AK-001"], "cluster": "B", "donor": {"stream": "AK", "notes": "Websites & Social Media budget line."}, "notes": "Implement phase 2 website design. Data-free, mobile-first. Include question submission portal, EJ resource library, community radio station links.", "type": "task", "priority": 1}, {"id": "AK-003", "title": "Plan & Coordinate Ask Karabo Roadshow Logistics", "pillar": "ALUM", "owner_id": "FS", "support_owner_ids": ["TAT", "TN"], "start_date": "2026-03-01", "due_date": "2026-04-15", "dependencies": ["AK-001"], "cluster": "B", "donor": {"stream": "AK", "notes": "Roadshow logistics: travel, venue, catering."}, "notes": "Plan 6-day mobile clinic roadshow (7 CER staff + 30 participants per site). Confirm sites, book travel, accommodation and venues. Coordinate with ad hoc clinic committee.", "type": "task", "priority": 1}, {"id": "AK-004", "title": "Deliver Ask Karabo Roadshow \u2014 Mobile Clinic", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["TG", "DAN", "TN", "FS"], "start_date": "2026-05-01", "due_date": "2026-08-31", "dependencies": ["AK-002", "AK-003"], "cluster": "B", "donor": {"stream": "AK", "notes": "Core AK campaign activity."}, "notes": "Deliver mobile legal clinic roadshow across 3-6 sites. 30 participants per session. Film and photograph for content. Coordinate with community media.", "type": "event", "priority": 1}, {"id": "AK-005", "title": "Plan & Facilitate x3 Youth & Learner Workshops", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["FS", "TN"], "start_date": "2026-03-01", "due_date": "2026-08-31", "dependencies": ["AK-001"], "cluster": "B", "donor": {"stream": "AK", "notes": "Youth engagement budget line."}, "notes": "Workshops for learners and varsity students on environmental rights and EJ. Demystify narratives, build EJ literacy. Include data-free interactive elements.", "type": "task", "priority": 2}, {"id": "AK-006", "title": "Finalise CME Guides \u2014 Mine Rehab & Children's Rights", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["DAN", "TG"], "start_date": "2026-03-01", "due_date": "2026-07-31", "dependencies": ["AK-001"], "cluster": "B", "donor": {"stream": "AK", "notes": "Printing, design and translation under AK budget."}, "notes": "Finalise 2 CME guides: (1) Mine Rehabilitation, (2) Environment & Children's Rights. Commission translation into 2 languages. Publish and distribute.", "type": "task", "priority": 2}, {"id": "AK-007", "title": "Develop Learner Environmental Justice Curriculum", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["DAN", "MK"], "start_date": "2026-03-01", "due_date": "2026-08-31", "dependencies": ["AK-005"], "cluster": "B", "donor": {"stream": "AK", "notes": "Curriculum development for youth programme."}, "notes": "Formalise structure of learner environmental programme. Develop EJ curriculum for schools. Align with national curriculum where possible.", "type": "task", "priority": 2}, {"id": "AK-008", "title": "Integrate Ask Karabo with Environmental Violations Portal", "pillar": "ALUM", "owner_id": "TG", "support_owner_ids": ["TAT", "FS"], "start_date": "2026-06-01", "due_date": "2026-09-30", "dependencies": ["AK-002", "AK-004"], "cluster": "B", "donor": {"stream": "AK", "notes": "Portal integration: IT support required."}, "notes": "Streamline violation reporting from AK campaign into portal. Train roadshow participants on portal usage. Improve data flow to case and advocacy teams.", "type": "task", "priority": 2}, {"id": "AK-009", "title": "Human Rights Festival \u2014 CER Participation", "pillar": "ALUM", "owner_id": "TAT", "support_owner_ids": ["FS"], "start_date": "2026-03-01", "due_date": "2026-03-21", "dependencies": [], "cluster": "B", "donor": {"stream": "AK", "notes": "Printing and travel budget line."}, "notes": "Represent CER at Human Rights Festival. Distribute AK materials, CME guides and portal info. Film content for social media.", "type": "event", "priority": 2}, {"id": "AK-010", "title": "Produce Ask Karabo Merchandise & Promo Materials", "pillar": "ALUM", "owner_id": "FS", "support_owner_ids": ["TAT"], "start_date": "2026-03-01", "due_date": "2026-04-30", "dependencies": ["AK-001"], "cluster": "B", "donor": {"stream": "AK", "notes": "Project promotion budget line."}, "notes": "Design and procure AK branded merchandise for roadshows: tote bags, stickers, printed guides. Align with website and campaign visual identity.", "type": "task", "priority": 2}, {"id": "LR-001", "title": "Monitor Portfolio Committees (Monthly)", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": ["TN"], "start_date": "2026-03-01", "due_date": "2026-11-30", "dependencies": [], "cluster": "C", "donor": {"stream": "LR", "notes": "Documented in monthly parliamentary liaison reports."}, "notes": "Monitor: forestry, fisheries, environment; mineral & petroleum; energy & electricity; water & sanitation. Share updates via knowledge hub. Involve R&R alumni.", "type": "task", "priority": 1}, {"id": "LR-002", "title": "Track New Gazettes, Law Reports & Cabinet Statements", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": [], "start_date": "2026-02-24", "due_date": "2026-11-30", "dependencies": [], "cluster": "C", "donor": {"stream": "LR", "notes": "Internal legal intelligence function."}, "notes": "Monitor ELA newsletters, Saflii law reports, cabinet statements. Circulate relevant updates to all CER attorneys through shared knowledge hub. Flag MPRDA/UPRDA amendments.", "type": "task", "priority": 2}, {"id": "LR-003", "title": "Draft Mine Blasting Community Guide", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": ["TAT", "TG"], "start_date": "2026-03-01", "due_date": "2026-06-30", "dependencies": ["LR-002"], "cluster": "C", "donor": {"stream": "LR", "notes": "AS&T-Mining collaboration."}, "notes": "Finalise community-facing guide on mine blasting standards. Cover: blast risk committees, seismograph installation, reporting to Mine Health & Safety Inspectorate. Translate into Zulu and Sotho.", "type": "task", "priority": 2}, {"id": "LR-004", "title": "Mobilise Activists for Parliamentary Submissions", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": ["TN", "TAT"], "start_date": "2026-03-01", "due_date": "2026-11-30", "dependencies": ["LR-001", "LR-003"], "cluster": "C", "donor": {"stream": "LR", "notes": "Bringing Parliament to activists."}, "notes": "Facilitate R&R alumni and community partner engagement with parliamentary processes. Facilitate parliamentary questions for written answer. Run CME-style accessible submission campaign.", "type": "task", "priority": 2}, {"id": "LR-005", "title": "Design Accessible Parliamentary Submissions Campaign", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": ["TAT", "TN"], "start_date": "2026-04-01", "due_date": "2026-08-31", "dependencies": ["LR-004"], "cluster": "C", "donor": {"stream": "LR", "notes": "Comms budget for campaign design."}, "notes": "Design campaign making draft law amendments easy to understand. Develop submission template for activists. Disseminate via AK platform, CER website and partner networks.", "type": "task", "priority": 2}, {"id": "LR-006", "title": "Develop Law Reform Media & Op-Ed Strategy", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": ["TG", "MK"], "start_date": "2026-04-01", "due_date": "2026-07-31", "dependencies": ["LR-001"], "cluster": "C", "donor": {"stream": "LR", "notes": "Strategic comms budget."}, "notes": "Write and place 2+ op-eds: (1) EJ leadership & women defenders; (2) admin justice & EJ. Draft academic article on CME, mine blasting or EJ movement for scholarly publication.", "type": "task", "priority": 2}, {"id": "LR-007", "title": "Launch Imbabala Mine Rehabilitation Litigation", "pillar": "STRAT", "owner_id": "TG", "support_owner_ids": ["DAN", "MK"], "start_date": "2026-03-01", "due_date": "2026-09-30", "dependencies": ["LR-003"], "cluster": "C", "donor": {"stream": "LR", "notes": "Counsel fees and court costs."}, "notes": "Launch precedent-setting mine rehabilitation case. Engage James and correspondent counsel. Coordinate community plaintiff support. Target first/second quarter filing.", "type": "task", "priority": 1}, {"id": "LR-008", "title": "Civil Damages Blasting Case \u2014 Case Building", "pillar": "STRAT", "owner_id": "DAN", "support_owner_ids": ["TG"], "start_date": "2026-03-01", "due_date": "2026-12-31", "dependencies": ["LR-003"], "cluster": "C", "donor": {"stream": "LR", "notes": "Legal research and workshop costs."}, "notes": "Build civil damages claim for community infrastructure damage from mine blasting. Develop jurisprudence on polluter-pays principle. Coordinate technical seismograph evidence.", "type": "task", "priority": 2}, {"id": "LR-009", "title": "Anti-SLAPP Engagement with CALS", "pillar": "STRAT", "owner_id": "TAT", "support_owner_ids": ["DAN"], "start_date": "2026-02-24", "due_date": "2026-11-30", "dependencies": [], "cluster": "C", "donor": {"stream": "LR", "notes": "Travel costs for in-person engagements."}, "notes": "Continue engagement with CALS on anti-SLAPP campaign and policy advocacy. Track legislative developments. Support activists facing SLAPP suits.", "type": "task", "priority": 2}, {"id": "LR-010", "title": "Collate CME Statistics & Revive Disclosure Advocacy", "pillar": "STRAT", "owner_id": "TAT", "support_owner_ids": ["DAN"], "start_date": "2026-06-01", "due_date": "2026-10-31", "dependencies": ["LR-001"], "cluster": "C", "donor": {"stream": "LR", "notes": "PAIA fees budget line."}, "notes": "Collate CME statistics across departments via PAIA requests. Advocate for consistent publication of CME stats. Engage local government on violation reporting chains.", "type": "task", "priority": 2}, {"id": "LR-011", "title": "Incorporate CER Work into NDC Accountability Advocacy", "pillar": "STRAT", "owner_id": "TAT", "support_owner_ids": ["TG", "DAN"], "start_date": "2026-04-01", "due_date": "2026-10-31", "dependencies": ["LR-006"], "cluster": "C", "donor": {"stream": "LR", "notes": "AS&T-PCC joint programme advocacy."}, "notes": "Integrate AS&T community and CME work into NDC implementation tracking. Publish at least 2x op-eds on CME-Just Transition linkages. Coordinate with PCC team.", "type": "task", "priority": 2}, {"id": "LR-012", "title": "Women Activists Profiling & Sequel Report", "pillar": "STRAT", "owner_id": "TG", "support_owner_ids": ["TAT"], "start_date": "2026-03-01", "due_date": "2026-10-31", "dependencies": ["LR-006"], "cluster": "C", "donor": {"stream": "LR", "notes": "Report designer fees and data costs."}, "notes": "Profile women activists in environmental and climate activism. Produce sequel report on how women are disproportionately affected by climate change. Target mid-year publication.", "type": "task", "priority": 2}, {"id": "OPS-001", "title": "HHCT RR Addendum \u2014 Confirm Implementation Schedule", "pillar": "OPS", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-02-24", "due_date": "2026-03-15", "dependencies": [], "cluster": "D", "donor": {"stream": "RR", "notes": "Per DONOR_RR_Addendum_Jan2026 requirements."}, "notes": "Review Jan 2026 addendum obligations. Confirm implementation schedule with team. Flag any deviations from MOU Annexure A budget lines.", "type": "task", "priority": 1}, {"id": "OPS-002", "title": "Q1 M&E Data Collection", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": ["TN", "MK"], "start_date": "2026-03-01", "due_date": "2026-04-15", "dependencies": ["OPS-001"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "Required for all active donor streams."}, "notes": "Collect Q1 M&E data across all pillars. Update tracking template. Flag outcomes at risk. Prepare data pack for narrative report.", "type": "task", "priority": 2}, {"id": "OPS-003", "title": "Q1 Financial Reconciliation & Burn Rate Review", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": ["MK"], "start_date": "2026-04-01", "due_date": "2026-04-30", "dependencies": ["OPS-002"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "Per DONOR_RR_Budget Annexure A."}, "notes": "Reconcile Q1 actual spend vs budget. Identify underspend/overspend by line item. Flag reallocation needs to MK for approval before Q2 activities begin.", "type": "task", "priority": 2}, {"id": "OPS-004", "title": "Draft Q1 Donor Narrative Report \u2014 HHCT", "pillar": "OPS", "owner_id": "MK", "support_owner_ids": ["FS", "TN"], "start_date": "2026-04-15", "due_date": "2026-05-15", "dependencies": ["OPS-002", "OPS-003"], "cluster": "D", "donor": {"stream": "RR", "notes": "HHCT quarterly reporting requirement."}, "notes": "Draft quarterly narrative report for HHCT. Include: activities vs planned, outcome progress, financial summary, risks and mitigation. Circulate internally before submission.", "type": "task", "priority": 2}, {"id": "OPS-005", "title": "Submit Q1 Report to HHCT & 11th Hour", "pillar": "OPS", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-05-15", "due_date": "2026-05-31", "dependencies": ["OPS-004"], "cluster": "D", "donor": {"stream": "RR", "notes": "Submit via donor portal. Retain signed copy."}, "notes": "Final submission of Q1 report. Include financial statements. File confirmation of receipt.", "type": "task", "priority": 2}, {"id": "OPS-006", "title": "Q2 M&E Data Collection", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": ["TN"], "start_date": "2026-06-01", "due_date": "2026-07-15", "dependencies": ["OPS-005"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "All active donor streams."}, "notes": "Collect Q2 M&E data. Mid-year review: assess if on track for annual targets. Prepare adjustment recommendations for MK.", "type": "task", "priority": 2}, {"id": "OPS-007", "title": "Q2 Financial Reconciliation & Mid-Year Review", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": ["MK"], "start_date": "2026-07-01", "due_date": "2026-07-31", "dependencies": ["OPS-006"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "Mid-year financial review."}, "notes": "Full mid-year financial reconciliation. Reallocate underspent budget lines if needed. Prepare mid-year financial narrative.", "type": "task", "priority": 2}, {"id": "OPS-008", "title": "Draft Q2 Donor Narrative Report \u2014 HHCT", "pillar": "OPS", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-07-15", "due_date": "2026-08-15", "dependencies": ["OPS-006", "OPS-007"], "cluster": "D", "donor": {"stream": "RR", "notes": "Mid-year narrative report."}, "notes": "Draft mid-year narrative. Highlight R&R preparations, AK roadshow outcomes, law reform activities. Submit by end of August.", "type": "task", "priority": 2}, {"id": "OPS-009", "title": "Submit Q2 Report & Board Presentation", "pillar": "OPS", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-08-15", "due_date": "2026-08-31", "dependencies": ["OPS-008"], "cluster": "D", "donor": {"stream": "RR", "notes": "Board submission for CER governance."}, "notes": "Submit Q2 report to donors. Prepare and present AS&T mid-year update to CER Board. Include risk register and strategy adjustments.", "type": "task", "priority": 2}, {"id": "OPS-010", "title": "Document & File Management System Maintenance", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": [], "start_date": "2026-02-24", "due_date": "2026-11-30", "dependencies": [], "cluster": null, "donor": {"stream": "OPS", "notes": "SharePoint/shared drive access."}, "notes": "Maintain structured, accessible document filing system. Weekly updates. Ensure all programme outputs are consistently filed. Reduces admin risk and improves continuity.", "type": "task", "priority": 2}, {"id": "OPS-011", "title": "Task Tracking & Team Commitment Follow-Up", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": ["MK"], "start_date": "2026-02-24", "due_date": "2026-11-30", "dependencies": [], "cluster": null, "donor": {"stream": "OPS", "notes": "Admin coordination."}, "notes": "Bi-weekly follow-up on team task commitments. Use task tracker and reminders. Flag overdue items to MK. Keep action log from all team meetings.", "type": "task", "priority": 2}, {"id": "OPS-012", "title": "R&R M&E Support \u2014 Track Participant Progress", "pillar": "OPS", "owner_id": "FS", "support_owner_ids": ["TN"], "start_date": "2026-09-28", "due_date": "2026-10-31", "dependencies": ["RR-008"], "cluster": "A", "donor": {"stream": "RR", "notes": "M&E tracking per cohort period."}, "notes": "Track R&R 2026 participant progress during and after the course. Collect post-course engagement data. Administer surveys. Input to impact report pipeline.", "type": "task", "priority": 2}, {"id": "TRAIN-001", "title": "Purchase Portable Training Workshop Kit", "pillar": "TRAIN", "owner_id": "TN", "support_owner_ids": ["FS"], "start_date": "2026-02-24", "due_date": "2026-03-28", "dependencies": [], "cluster": null, "donor": {"stream": "RR", "notes": "Workshop and meeting costs budget line."}, "notes": "Procure portable training kit: flip charts, markers, printed materials, basic AV. Used across all community visit and training activities.", "type": "task", "priority": 2}, {"id": "TRAIN-002", "title": "Plan High-Impact Community Legal Training", "pillar": "TRAIN", "owner_id": "TAT", "support_owner_ids": ["DAN", "MK"], "start_date": "2026-04-01", "due_date": "2026-05-31", "dependencies": ["TRAIN-001"], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Venue, catering, travel budget line."}, "notes": "Plan at least 1 short high-impact training for community struggles: mine blasting, climate impact assessments, or defender safety. Tailor to active litigation/advocacy needs.", "type": "task", "priority": 2}, {"id": "TRAIN-003", "title": "Deliver High-Impact Community Legal Training (June)", "pillar": "TRAIN", "owner_id": "TAT", "support_owner_ids": ["DAN", "TN"], "start_date": "2026-06-01", "due_date": "2026-06-30", "dependencies": ["TRAIN-002"], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Core AS&T training delivery."}, "notes": "Deliver planned community training. Cover: legal remedies, evidence gathering, regulatory engagement, safety protocols for activists.", "type": "event", "priority": 2}, {"id": "TRAIN-004", "title": "Waste Management Legal Training", "pillar": "TRAIN", "owner_id": "TAT", "support_owner_ids": ["DAN"], "start_date": "2026-04-01", "due_date": "2026-08-31", "dependencies": [], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Workshop budget line."}, "notes": "Plan and lead at least 1 waste management legal training. Identify municipalities and corporates for accountability work. Coordinate with PCC team on waste violation data.", "type": "task", "priority": 2}, {"id": "TRAIN-005", "title": "Gender & EJ 3-Day Workshop (Mmatshilo Motsei)", "pillar": "TRAIN", "owner_id": "TG", "support_owner_ids": ["MK", "TAT"], "start_date": "2026-04-01", "due_date": "2026-06-30", "dependencies": [], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Facilitator fee, venue and catering."}, "notes": "3-day gender workshop facilitated by Mmatshilo Motsei. Consolidate CER Gender and EJ work. All AS&T attorneys attend. Output: internal gender lens framework.", "type": "event", "priority": 2}, {"id": "TRAIN-006", "title": "Wellness Guide for Activists \u2014 Finalise & Publish", "pillar": "TRAIN", "owner_id": "TAT", "support_owner_ids": ["MK"], "start_date": "2026-03-01", "due_date": "2026-07-31", "dependencies": [], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Printing and report designer fees."}, "notes": "Improve and finalise the mini wellness guide for activists. Commission design. Print and distribute via roadshow, R&R course, and partner networks.", "type": "task", "priority": 2}, {"id": "TRAIN-007", "title": "Deliver x2 Wellness Trainings for Activists", "pillar": "TRAIN", "owner_id": "TAT", "support_owner_ids": ["MK"], "start_date": "2026-04-01", "due_date": "2026-08-31", "dependencies": ["TRAIN-006"], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Facilitator, venue, catering, travel budget lines."}, "notes": "Plan and lead 2 wellness trainings. Cover: burnout prevention, security practices, self-care as political act. Include at least 1 for R&R alumni cohort.", "type": "task", "priority": 2}, {"id": "TRAIN-008", "title": "Political Workshop \u2014 School of Unity & Liberation Pilot", "pillar": "TRAIN", "owner_id": "TN", "support_owner_ids": ["MK"], "start_date": "2026-09-01", "due_date": "2026-11-30", "dependencies": ["TRAIN-003"], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Venue, accommodation, flights budget lines."}, "notes": "Political workshop for 10 selected activists using School of Unity and Liberation curriculum. Test run. Document for scaling in future years.", "type": "event", "priority": 2}, {"id": "TRAIN-009", "title": "Paralegal Partnership \u2014 ACAOSA/CAOSA Training", "pillar": "TRAIN", "owner_id": "DAN", "support_owner_ids": ["TAT"], "start_date": "2026-03-01", "due_date": "2026-11-30", "dependencies": [], "cluster": null, "donor": {"stream": "TRAIN", "notes": "Workshop costs."}, "notes": "Formalise partnership with at least 1 national paralegal body (ACAOSA/CAOSA). Deliver EJ-focused paralegal training. Receive community-based advice training in exchange.", "type": "task", "priority": 2}, {"id": "TRAIN-010", "title": "Team Leadership Development Programme", "pillar": "TRAIN", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-03-01", "due_date": "2026-12-31", "dependencies": [], "cluster": null, "donor": {"stream": "OPS", "notes": "R5000 per team member training budget."}, "notes": "Year-long team development. Each AS&T member owns one strategic leadership domain: budgeting, community management, fundraising, media, M&E, or external representation.", "type": "task", "priority": 2}, {"id": "ALUM-001", "title": "R&R Alumni Network Wide Convening", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": ["MK", "FS"], "start_date": "2026-04-15", "due_date": "2026-06-30", "dependencies": ["RR-009"], "cluster": "A", "donor": {"stream": "RR", "notes": "Covered under alumni strengthening objective."}, "notes": "Convene full alumni network meeting. Agenda: reflect on 2025, develop 2026 action plan, consolidate/elect leadership structure, set NWG constitution. Hybrid format.", "type": "event", "priority": 1}, {"id": "ALUM-002", "title": "Alumni Leadership & Governance Training", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": ["MK"], "start_date": "2026-04-01", "due_date": "2026-04-30", "dependencies": ["ALUM-001"], "cluster": "A", "donor": {"stream": "RR", "notes": "Facilitator, accommodation, flights for participants."}, "notes": "Leadership and governance training for alumni network. Strengthen governance systems, build capacity for self-management, clarify roles and accountability structures.", "type": "event", "priority": 2}, {"id": "ALUM-003", "title": "Alumni Strategic Planning Workshop", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": ["MK"], "start_date": "2026-05-01", "due_date": "2026-06-30", "dependencies": ["ALUM-002"], "cluster": "A", "donor": {"stream": "RR", "notes": "Accommodation, venue, catering for participants."}, "notes": "Strategic planning workshop for alumni network. Develop comprehensive 2026-2028 strategy. Enable independent programme delivery from provincial structures.", "type": "event", "priority": 2}, {"id": "ALUM-004", "title": "Alumni NWG \u2014 Finalise TOR & Constitution", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": [], "start_date": "2026-02-24", "due_date": "2026-03-31", "dependencies": [], "cluster": "A", "donor": {"stream": "RR", "notes": "Virtual engagement."}, "notes": "Meeting with Alumni NWG to finalise TOR/Constitution, governance structures, programmes, funding model and coalition planning for 2026.", "type": "task", "priority": 1}, {"id": "ALUM-005", "title": "Commission 3 Alumni Impact Case Studies", "pillar": "ALUM", "owner_id": "MK", "support_owner_ids": ["TN"], "start_date": "2026-03-01", "due_date": "2026-07-31", "dependencies": ["RR-013"], "cluster": "A", "donor": {"stream": "RR", "notes": "Data support and communication costs."}, "notes": "Commission 3 high-quality, public-facing case studies written by R&R alumni on successful use of legal remedies post-training. Edit and publish on CER website.", "type": "task", "priority": 2}, {"id": "ALUM-006", "title": "Alumni Monthly Stipend Programme Launch", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": ["FS"], "start_date": "2026-02-24", "due_date": "2026-03-15", "dependencies": [], "cluster": "A", "donor": {"stream": "RR", "notes": "Data support and communication costs budget line."}, "notes": "Set up and administer monthly financial stipends for R&R alumni network leadership. Stipends for data/airtime to support activist work and CER correspondence.", "type": "task", "priority": 2}, {"id": "ALUM-007", "title": "Community Media Strategy Development", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": ["TAT"], "start_date": "2026-04-01", "due_date": "2026-07-31", "dependencies": ["ALUM-001"], "cluster": "A", "donor": {"stream": "RR", "notes": "Community media engagement."}, "notes": "Develop community media engagement strategy linking alumni network to CER advocacy. Train alumni on leveraging community radio and digital platforms for EJ messaging.", "type": "task", "priority": 2}, {"id": "ALUM-008", "title": "Movement Support \u2014 SAWC, MEJCON, VEJA", "pillar": "ALUM", "owner_id": "TN", "support_owner_ids": ["MK"], "start_date": "2026-02-24", "due_date": "2026-11-30", "dependencies": [], "cluster": "A", "donor": {"stream": "RR", "notes": "Workshop and meeting costs."}, "notes": "Continued support to environmental justice movements: SAWC, MEJCON, VEJA. Attend convenings, provide legal information, facilitate peer learning.", "type": "task", "priority": 2}, {"id": "ALUM-009", "title": "Write R&R Op-Ed \u2014 Movement Building & State Clampdown", "pillar": "ALUM", "owner_id": "MK", "support_owner_ids": ["TN"], "start_date": "2026-07-01", "due_date": "2026-09-15", "dependencies": ["RR-001"], "cluster": "A", "donor": {"stream": "RR", "notes": "Strategic comms."}, "notes": "Write and publish op-ed setting the tone for the 2026 R&R theme. Target Mail & Guardian or Daily Maverick. Pre-R&R publication.", "type": "task", "priority": 2}, {"id": "ALUM-010", "title": "EJFund Board \u2014 Chair Quarterly Meetings", "pillar": "ALUM", "owner_id": "MK", "support_owner_ids": [], "start_date": "2026-02-24", "due_date": "2026-11-30", "dependencies": [], "cluster": null, "donor": {"stream": "RR", "notes": "Travel for in-person board meetings."}, "notes": "Chair EJFund Board: strategic planning (Feb), minimum 4 quarterly meetings, attend and present at annual Grantee Convening. Maintain partnership with EJFund grantees.", "type": "task", "priority": 2}, {"id": "STRAT-001", "title": "Convene EJ Partner Calendar Alignment Session", "pillar": "STRAT", "owner_id": "MK", "support_owner_ids": ["TN"], "start_date": "2026-02-24", "due_date": "2026-03-15", "dependencies": [], "cluster": null, "donor": {"stream": "Mixed", "notes": "Virtual: minimal cost."}, "notes": "Convene key EJ partners (EJFund, Benchmarks, groundWork, LAC, PILG) for 2026 calendar alignment. Create shared 2026-2027 movement calendar. Facilitate mutual promotion.", "type": "task", "priority": 2}, {"id": "STRAT-002", "title": "Zero Hour 2.0 \u2014 Plan, Draft & Publish", "pillar": "STRAT", "owner_id": "TAT", "support_owner_ids": ["DAN", "MK"], "start_date": "2026-05-01", "due_date": "2026-11-30", "dependencies": ["LR-001"], "cluster": "C", "donor": {"stream": "LR", "notes": "Printing, design and travel budget lines."}, "notes": "Plan, prepare and publish Zero Hour 2.0 report. Document state of environmental enforcement and activist criminalisation. Commission designer. Align with R&R and AK comms calendar.", "type": "task", "priority": 2}, {"id": "STRAT-003", "title": "HRD Response Funding Database", "pillar": "STRAT", "owner_id": "TAT", "support_owner_ids": ["TN"], "start_date": "2026-04-01", "due_date": "2026-08-31", "dependencies": [], "cluster": "C", "donor": {"stream": "LR", "notes": "Internal capacity building."}, "notes": "Map and develop comprehensive database of HRD response funding organisations. Collate stats on activists supported. Help activists at risk access emergency funding.", "type": "task", "priority": 2}, {"id": "STRAT-004", "title": "Environmental Violations Portal \u2014 Reports & Training", "pillar": "STRAT", "owner_id": "TG", "support_owner_ids": ["FS", "TAT"], "start_date": "2026-03-01", "due_date": "2026-11-30", "dependencies": [], "cluster": "B", "donor": {"stream": "AK", "notes": "Portal guides, reporting dashboard, training docs."}, "notes": "Ongoing portal training across all programme activities. Develop comprehensive report on portal usage and impact. Publish portal stats quarterly. Align with case team needs.", "type": "task", "priority": 2}, {"id": "BUD-001", "title": "Q1 Budget Variance Review", "pillar": "BUD", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-03-31", "due_date": "2026-04-15", "dependencies": ["OPS-003"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "Covers RR and SADF/11th Hour streams."}, "notes": "Review Q1 actual spend vs AS&T FY27 budget sheet. Flag lines >10% off-track. Propose reallocations. Report to Executive.", "type": "task", "priority": 2}, {"id": "BUD-002", "title": "Q2 Budget Variance Review", "pillar": "BUD", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-06-30", "due_date": "2026-07-15", "dependencies": ["OPS-007"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "Mid-year budget review."}, "notes": "Review mid-year budget position across all pillars. Cross-reference BUDGET_FY27_29_Consolidated_Draft. Confirm forecasts for H2 especially R&R course.", "type": "task", "priority": 2}, {"id": "BUD-003", "title": "Q3 Budget Variance Review", "pillar": "BUD", "owner_id": "MK", "support_owner_ids": ["FS"], "start_date": "2026-09-30", "due_date": "2026-10-15", "dependencies": ["BUD-002"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "Post-R&R course financial review."}, "notes": "Q3 review immediately post R&R course delivery. Verify all course expenses reconciled. Check against DONOR_RR budget ceiling. Prepare year-end forecast.", "type": "task", "priority": 2}, {"id": "BUD-004", "title": "Year-End Financial Close & Donor Reconciliation", "pillar": "BUD", "owner_id": "FS", "support_owner_ids": ["MK"], "start_date": "2026-11-01", "due_date": "2026-12-31", "dependencies": ["BUD-003"], "cluster": "D", "donor": {"stream": "Mixed", "notes": "All donor streams \u2014 year-end close."}, "notes": "Full year-end financial close. Reconcile all donor streams. Prepare financial statements for annual audit. Input into FY28 budget planning cycle.", "type": "task", "priority": 2}], "events": [], "pillars": [{"code": "RR", "name": "R&R Program"}, {"code": "ALUM", "name": "Alumni"}, {"code": "TRAIN", "name": "Training"}, {"code": "OPS", "name": "Operations"}, {"code": "STRAT", "name": "Strategy"}, {"code": "BUD", "name": "Budget"}]};
+}
+
+/* ---------- Derived lists ---------- */
+function ownersList(base) {
+  const arr = base.owners || base.people || [];
+  return Array.isArray(arr) ? arr : [];
+}
+function pillarsList(base) {
+  const p = base.pillars;
+  if (Array.isArray(p) && p.length) return p;
+  const ts = Array.isArray(base.tasks) ? base.tasks : [];
+  const codes = uniq(ts.map((t) => t?.pillar).filter(Boolean)).sort();
+  return codes.map((code) => ({ code, name: code }));
+}
+function ownerName(ownerId) {
+  const base = state.merged || state.base || {};
+  const owners = ownersList(base);
+  const found = owners.find((o) => o.owner_id === ownerId || o.id === ownerId);
+  return found ? found.name || ownerId : ownerId || "—";
+}
+function pillarLabel(pillarCode) {
+  const base = state.merged || state.base || {};
+  const pillars = pillarsList(base);
+  const found = pillars.find(
+    (p) => p.code === pillarCode || p.id === pillarCode || p.pillar === pillarCode
+  );
+  return found ? found.name || found.label || pillarCode : pillarCode || "—";
+}
+function getStatus(t) {
+  const patch = state.overlays.task_overrides?.[t.id] || {};
+  const status = patch.status || t.status || "";
+  return status === "completed" ? "completed" : "open";
+}
+function isDone(t) {
+  return getStatus(t) === "completed";
+}
+function isOverdue(t, today) {
+  if (isDone(t)) return false;
+  const due = parseISODate(t.due_date);
+  if (!due) return false;
+  return due < today;
+}
+function matchesFilters(item) {
+  const f = state.filters;
+
+  const q = (f.q || "").trim().toLowerCase();
+  if (q) {
+    const hay = `${item.title || ""} ${item.notes || ""} ${item.id || ""}`.toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+
+  if (f.pillar !== "any" && (item.pillar || "") !== f.pillar) return false;
+  if (f.owner_id !== "any" && (item.owner_id || "") !== f.owner_id) return false;
+
+  if (f.month !== "any") {
+    const d = (item.due_date || item.start_date || "");
+    if (!d.startsWith(f.month)) return false;
+  }
+
+  if (f.status !== "any") {
+    if (f.status === "completed" && item.__status !== "completed") return false;
+    if (f.status === "open" && item.__status !== "open") return false;
+  }
+
+  return true;
+}
+
+function sortItems(items) {
+  const today = parseISODate(todayLocalISO());
+  const getKey = (it) => {
+    if (state.sort === "priority") return priorityNum(it.priority);
+    const d =
+      parseISODate(state.sort === "start" ? it.start_date : it.due_date) ||
+      parseISODate(state.sort === "start" ? it.due_date : it.start_date);
+    return d ? d.getTime() : 9e15;
+  };
+
+  return items.slice().sort((a, b) => {
+    // Overdue floats up inside open lists
+    const ao = a.__status === "open" && isOverdue(a, today) ? 0 : 1;
+    const bo = b.__status === "open" && isOverdue(b, today) ? 0 : 1;
+    if (a.__status === "open" && b.__status === "open" && ao !== bo) return ao - bo;
+
+    const ka = getKey(a);
+    const kb = getKey(b);
+    if (ka !== kb) return ka - kb;
+
+    return safeText(a.title).localeCompare(safeText(b.title));
+  });
+}
+
+/* ---------- View building ---------- */
+function decorateTasks(tasks) {
+  return tasks.map((t) => ({
+    ...t,
+    __status: isDone(t) ? "completed" : "open",
+    type: normalizeType(t.type) || "task"
+  }));
+}
+
+function buildTaskList(view) {
+  const merged = state.merged || {};
+  const tasks = Array.isArray(merged.tasks) ? merged.tasks : [];
+  const today = parseISODate(todayLocalISO());
+  const wStart = startOfWeek(today);
+  const wEnd = endOfWeek(today);
+  const mStart = startOfMonth(today);
+  const mEnd = endOfMonth(today);
+
+  let list = decorateTasks(tasks);
+
+  if (view === "completed") list = list.filter((t) => t.__status === "completed");
+  else list = list.filter((t) => t.__status === "open");
+
+  if (view === "week") {
+    list = list.filter((t) => {
+      const d = parseISODate(t.due_date) || parseISODate(t.start_date);
+      return d && d >= wStart && d <= wEnd;
+    });
+  } else if (view === "month") {
+    list = list.filter((t) => {
+      const d = parseISODate(t.due_date) || parseISODate(t.start_date);
+      return d && d >= mStart && d <= mEnd;
+    });
+  } else if (view === "upcoming") {
+    list = list.filter((t) => {
+      const d = parseISODate(t.due_date) || parseISODate(t.start_date);
+      if (!d) return true;
+      return d >= today;
+    });
+  } else if (view === "today") {
+    // Today view is sectioned later
+  }
+
+  list = list.filter(matchesFilters);
+  list = sortItems(list);
+  return list;
+}
+
+function buildEvents() {
+  const merged = state.merged || {};
+  const baseEvents = Array.isArray(merged.events) ? merged.events : [];
+  const tasks = Array.isArray(merged.tasks) ? merged.tasks : [];
+
+  const taskEvents = tasks
+    .filter((t) => {
+      const type = normalizeType(t.type);
+      return type === "event" || type === "meeting";
+    })
+    .map((t) => ({ ...t, __from_tasks: true }));
+
+  const combined = baseEvents.concat(taskEvents).map((e) => ({
+    ...e,
+    __status: isDone(e) ? "completed" : "open",
+    type: normalizeType(e.type) || (e.__from_tasks ? "event" : "event")
+  }));
+
+  return sortItems(combined.filter((e) => e.__status === "open").filter(matchesFilters));
+}
+
+/* ---------- UI helpers ---------- */
+function viewTitleText(view) {
+  const today = parseISODate(todayLocalISO());
+  if (view === "today") return `Today (${isoFromDate(today)})`;
+  if (view === "week") return `Week (${isoFromDate(startOfWeek(today))} → ${isoFromDate(endOfWeek(today))})`;
+  if (view === "month") return `Month (${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")})`;
+  if (view === "upcoming") return "Upcoming";
+  if (view === "completed") return "Completed";
+  if (view === "events") return "Events / Milestones";
+  if (view === "pillars") return "Pillars Dashboard";
+  return "Tasks";
+}
+function updateMetaLine() {
+  const base = state.base || {};
+  const meta = base.meta || {};
+  const tz = meta.timezone ? `• ${meta.timezone}` : "";
+  const ver = meta.version ? `v${meta.version}` : "";
+  const line = [ver, meta.last_updated ? `updated ${meta.last_updated}` : "", tz].filter(Boolean).join(" ");
+  document.getElementById("metaLine").textContent = line || "Flow Tasks";
+}
+function updateStorageInfo(overlays) {
+  const el = document.getElementById("storageInfo");
+  try {
+    const bytes = new Blob([JSON.stringify(overlays)]).size;
+    el.textContent = `Overlays: ${overlays.deletions.length} del • ${Object.keys(overlays.task_overrides || {}).length} patch • ${overlays.new_tasks.length} new • ~${Math.round(bytes / 1024)} KB`;
+  } catch {
+    el.textContent = "Local overlays stored.";
+  }
+}
+function openSheet(id) {
+  const el = document.getElementById(id);
+  if (el) el.hidden = false;
+}
+function closeSheet(id) {
+  const el = document.getElementById(id);
+  if (el) el.hidden = true;
+}
+
+/* ---------- Long press ---------- */
+function attachLongPress(el, onLongPress) {
+  let timer = null;
+  let moved = false;
+  const start = () => {
+    moved = false;
+    timer = setTimeout(() => {
+      if (!moved) onLongPress();
+    }, 420);
+  };
+  const cancel = () => {
+    if (timer) clearTimeout(timer);
+    timer = null;
+  };
+
+  el.addEventListener("touchstart", start, { passive: true });
+  el.addEventListener("touchend", cancel);
+  el.addEventListener(
+    "touchmove",
+    () => {
+      moved = true;
+      cancel();
+    },
+    { passive: true }
+  );
+
+  el.addEventListener("mousedown", start);
+  el.addEventListener("mouseup", cancel);
+  el.addEventListener("mouseleave", cancel);
+  el.addEventListener("mousemove", () => {
+    moved = true;
+    cancel();
+  });
+}
+
+/* ---------- Overlay mutations ---------- */
+function ensurePatch(id) {
+  if (!state.overlays.task_overrides[id]) state.overlays.task_overrides[id] = {};
+  return state.overlays.task_overrides[id];
+}
+
+function logComplete(id, completed) {
+  const now = new Date().toISOString();
+  state.overlays.learning.stats.completes += 1;
+  state.overlays.learning.completion_log.push({ id, completed, at: now });
+  state.overlays.learning.completion_log = state.overlays.learning.completion_log.slice(-400);
+}
+
+function logMove(id, from, to, reason) {
+  const now = new Date().toISOString();
+  state.overlays.learning.stats.moves += 1;
+  state.overlays.learning.move_log.push({ id, from, to, reason, at: now });
+  state.overlays.learning.move_log = state.overlays.learning.move_log.slice(-400);
+}
+
+function toggleComplete(id) {
+  const merged = state.merged || {};
+  const all = (merged.tasks || []).concat(merged.events || []);
+  const item = all.find((x) => x.id === id);
+  if (!item) return;
+
+  const patch = ensurePatch(id);
+  const nowDone = !(getStatus(item) === "completed");
+  patch.status = nowDone ? "completed" : "open";
+  patch.completed_at = nowDone ? new Date().toISOString() : null;
+
+  logComplete(id, nowDone);
+
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  toast(nowDone ? "Completed" : "Undone");
+  render();
+}
+
+function deleteItem(id) {
+  if (!id) return;
+  if (!state.overlays.deletions.includes(id)) state.overlays.deletions.push(id);
+  delete state.overlays.task_overrides[id];
+  state.overlays.new_tasks = state.overlays.new_tasks.filter((t) => t.id !== id);
+
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  toast("Deleted (overlay)");
+  render();
+}
+
+function moveToToday(id, reason = "manual") {
+  const patch = ensurePatch(id);
+  const today = todayLocalISO();
+  const before = { start_date: patch.start_date ?? null, due_date: patch.due_date ?? null };
+  patch.start_date = today;
+  patch.due_date = today;
+  logMove(id, before, { start_date: today, due_date: today }, reason);
+
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  toast("Moved to Today");
+  render();
+}
+
+function deferOneDay(id) {
+  const merged = state.merged || {};
+  const item = (merged.tasks || []).find((t) => t.id === id);
+  if (!item) return;
+
+  const patch = ensurePatch(id);
+  const current = parseISODate(patch.due_date || item.due_date || patch.start_date || item.start_date);
+  const d = current ? new Date(current) : parseISODate(todayLocalISO());
+  d.setDate(d.getDate() + 1);
+
+  const before = { start_date: patch.start_date ?? item.start_date ?? null, due_date: patch.due_date ?? item.due_date ?? null };
+  const nextISO = isoFromDate(d);
+  patch.due_date = nextISO;
+  if (!patch.start_date) patch.start_date = nextISO;
+  logMove(id, before, { start_date: patch.start_date, due_date: patch.due_date }, "defer_1d");
+
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  toast("Deferred");
+  render();
+}
+
+/* ---------- Rendering ---------- */
+function renderSummary() {
+  const list = buildTaskList("upcoming").filter((t) => t.__status === "open");
+  const today = parseISODate(todayLocalISO());
+  const wStart = startOfWeek(today);
+  const wEnd = endOfWeek(today);
+
+  const todayItems = list.filter((t) => {
+    const d = parseISODate(t.due_date) || parseISODate(t.start_date);
+    return d && isoFromDate(d) === isoFromDate(today);
+  });
+  const weekItems = list.filter((t) => {
+    const d = parseISODate(t.due_date) || parseISODate(t.start_date);
+    return d && d >= wStart && d <= wEnd;
+  });
+  const overdue = list.filter((t) => isOverdue(t, today));
+
+  document.getElementById("sumToday").textContent = String(todayItems.length);
+  document.getElementById("sumWeek").textContent = String(weekItems.length);
+  document.getElementById("sumOverdue").textContent = String(overdue.length);
+}
+
+function renderRecurring() {
+  const base = state.merged || {};
+  const rules = Array.isArray(base.recurrence_rules) ? base.recurrence_rules : [];
+  const panel = document.getElementById("recurringPanel");
+  if (!rules.length) {
+    panel.hidden = true;
+    return;
+  }
+  panel.hidden = false;
+
+  const overrides = state.overlays.recurrence_overrides || {};
+  panel.innerHTML = `
+    <div class="recHead" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong>Recurring</strong>
+      <span class="muted small">${rules.length} rule(s)</span>
+    </div>
+    ${rules
+      .map((r) => {
+        const enabled = overrides[r.id]?.enabled ?? true;
+        const meta = [r.frequency, r.day_of_week].filter(Boolean).join(" ");
+        return `
+        <div class="rule">
+          <div>
+            <strong>${safeText(r.title || r.id)}</strong>
+            <div class="muted small">${safeText(r.pillar || "")} ${meta ? "• " + meta : ""}</div>
+            ${r.notes ? `<div class="muted small">${safeText(r.notes)}</div>` : ""}
+          </div>
+          <button class="toggle ${enabled ? "on" : ""}" data-rec="${r.id}" aria-label="Toggle recurrence">
+            <span class="dot"></span>
+          </button>
+        </div>
+      `;
+      })
+      .join("")}
+  `;
+  panel.querySelectorAll(".toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.rec;
+      const cur = state.overlays.recurrence_overrides?.[id]?.enabled ?? true;
+      if (!state.overlays.recurrence_overrides) state.overlays.recurrence_overrides = {};
+      state.overlays.recurrence_overrides[id] = { enabled: !cur };
+      saveOverlays(state.overlays);
+      renderRecurring();
+      toast(!cur ? "Recurring enabled" : "Recurring disabled");
+    });
+  });
+}
+
+function renderPillarsDash() {
+  const dash = document.getElementById("pillarsDash");
+  const byPillar = document.getElementById("dashByPillar");
+  const byOwner = document.getElementById("dashByOwner");
+
+  const open = buildTaskList("upcoming").filter((t) => t.__status === "open");
+  const today = parseISODate(todayLocalISO());
+
+  function counts(groupKeyFn) {
+    const map = new Map();
+    for (const t of open) {
+      const k = groupKeyFn(t) || "—";
+      if (!map.has(k)) map.set(k, { total: 0, overdue: 0, p1: 0 });
+      const c = map.get(k);
+      c.total += 1;
+      if (isOverdue(t, today)) c.overdue += 1;
+      if (String(t.priority) === "1") c.p1 += 1;
+    }
+    return Array.from(map.entries()).sort((a, b) => b[1].total - a[1].total);
+  }
+
+  const pillarCounts = counts((t) => t.pillar);
+  const ownerCounts = counts((t) => t.owner_id);
+
+  byPillar.innerHTML =
+    pillarCounts
+      .map(
+        ([k, c]) => `
+    <div class="dashRow" data-pillar="${k}">
+      <div>
+        <div><strong>${pillarLabel(k)}</strong></div>
+        <small>${k}</small>
+      </div>
+      <div class="kpis">
+        <span class="kpi">${c.total} open</span>
+        <span class="kpi ${c.overdue ? "danger" : ""}">${c.overdue} overdue</span>
+        <span class="kpi">${c.p1} P1</span>
+      </div>
+    </div>
+  `
+      )
+      .join("") || `<div class="muted small">No open tasks.</div>`;
+
+  byOwner.innerHTML =
+    ownerCounts
+      .map(
+        ([k, c]) => `
+    <div class="dashRow" data-owner="${k}">
+      <div>
+        <div><strong>${ownerName(k)}</strong></div>
+        <small>${k}</small>
+      </div>
+      <div class="kpis">
+        <span class="kpi">${c.total} open</span>
+        <span class="kpi ${c.overdue ? "danger" : ""}">${c.overdue} overdue</span>
+        <span class="kpi">${c.p1} P1</span>
+      </div>
+    </div>
+  `
+      )
+      .join("") || `<div class="muted small">No open tasks.</div>`;
+
+  dash.hidden = state.view !== "pillars";
+
+  dash.querySelectorAll("[data-pillar]").forEach((row) => {
+    row.addEventListener("click", () => {
+      state.filters.pillar = row.dataset.pillar;
+      document.getElementById("filterPillar").value = state.filters.pillar;
+      setView("upcoming");
+      toast(`Filtered: ${row.dataset.pillar}`);
+    });
+  });
+  dash.querySelectorAll("[data-owner]").forEach((row) => {
+    row.addEventListener("click", () => {
+      state.filters.owner_id = row.dataset.owner;
+      document.getElementById("filterOwner").value = state.filters.owner_id;
+      setView("upcoming");
+      toast(`Filtered: ${row.dataset.owner}`);
+    });
+  });
+}
+
+function renderCard(t) {
+  const today = parseISODate(todayLocalISO());
+  const due = parseISODate(t.due_date);
+  const start = parseISODate(t.start_date);
+  const overdue = isOverdue(t, today);
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.id = t.id || "";
+
+  const box = document.createElement("button");
+  box.className = "checkbox" + (t.__status === "completed" ? " is-done" : "");
+  box.setAttribute(
+    "aria-label",
+    t.__status === "completed" ? "Mark as not completed" : "Mark as completed"
+  );
+  box.innerHTML = `<span aria-hidden="true">${t.__status === "completed" ? "✓" : ""}</span>`;
+  box.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleComplete(t.id);
+  });
+
+  const main = document.createElement("div");
+  main.className = "card__main";
+
+  const title = document.createElement("h3");
+  title.className = "card__title" + (t.__status === "completed" ? " done" : "");
+  title.textContent = safeText(t.title || "(untitled)");
+
+  const meta = document.createElement("div");
+  meta.className = "card__meta";
+
+  const pill = document.createElement("span");
+  pill.className = "badge accent";
+  pill.textContent = pillarLabel(t.pillar);
+
+  const own = document.createElement("span");
+  own.className = "badge";
+  own.textContent = ownerName(t.owner_id);
+
+  const d = document.createElement("span");
+  d.className = "badge" + (overdue ? " danger" : "");
+  d.textContent = due ? `due ${isoFromDate(due)}` : start ? `start ${isoFromDate(start)}` : "no date";
+
+  const pr = document.createElement("span");
+  pr.className = "badge ok";
+  pr.textContent = `P${t.priority ?? 2}`;
+
+  meta.append(pill, own, d, pr);
+  main.append(title, meta);
+
+  if (t.notes) {
+    const notes = document.createElement("div");
+    notes.className = "notes";
+    notes.textContent = safeText(t.notes);
+    main.appendChild(notes);
+  }
+
+  card.addEventListener("click", () => openEdit(t.id));
+  attachLongPress(card, () => openActions(t.id, t.title));
+
+  card.append(box, main);
+  return card;
+}
+
+function renderTodaySections(listEl) {
+  const today = parseISODate(todayLocalISO());
+  const all = buildTaskList("today").filter((t) => t.__status === "open");
+  const filtered = all.filter(matchesFilters);
+
+  const overdue = filtered.filter((t) => isOverdue(t, today));
+  const dueToday = filtered
+    .filter((t) => !isOverdue(t, today))
+    .filter((t) => {
+      const d = parseISODate(t.due_date) || parseISODate(t.start_date);
+      return d && isoFromDate(d) === isoFromDate(today);
+    });
+
+  const next = filtered.filter((t) => !overdue.includes(t) && !dueToday.includes(t));
+
+  const makeSection = (label, arr) => {
+    if (!arr.length) return;
+    const h = document.createElement("div");
+    h.className = "groupTitle";
+    h.textContent = label;
+    listEl.appendChild(h);
+    if (state.zen) listEl.appendChild(renderCard(arr[0]));
+    else arr.forEach((it) => listEl.appendChild(renderCard(it)));
+  };
+
+  makeSection("Overdue", sortItems(overdue));
+  makeSection("Today", sortItems(dueToday));
+  makeSection("Next", sortItems(next));
+
+  if (!overdue.length && !dueToday.length && !next.length) {
+    listEl.innerHTML = `<div class="muted" style="padding:18px 6px">Nothing here. Quick Add to capture something.</div>`;
+  }
+}
+
+function render() {
+  document.body.classList.toggle("zen", state.zen);
+
+  document.getElementById("viewTitle").textContent = viewTitleText(state.view);
+  renderSummary();
+  renderRecurring();
+  renderPillarsDash();
+  renderAiHint();
+
+  const listEl = document.getElementById("list");
+  listEl.innerHTML = "";
+
+  if (state.view === "pillars") return;
+
+  if (state.view === "today") {
+    renderTodaySections(listEl);
+    return;
+  }
+
+  let items = [];
+  if (state.view === "events") items = buildEvents();
+  else items = buildTaskList(state.view);
+
+  if (!items.length) {
+    listEl.innerHTML = `<div class="muted" style="padding:18px 6px">Nothing here. Quick Add to capture something.</div>`;
+    return;
+  }
+
+  const groups = new Map();
+  for (const it of items) {
+    const d = parseISODate(it.due_date) || parseISODate(it.start_date);
+    const key = d ? isoFromDate(d) : "No date";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(it);
+  }
+  const entries = Array.from(groups.entries()).sort((a, b) => {
+    if (a[0] === "No date") return 1;
+    if (b[0] === "No date") return -1;
+    return a[0].localeCompare(b[0]);
+  });
+
+  for (const [k, arr] of entries) {
+    const h = document.createElement("div");
+    h.className = "groupTitle";
+    h.textContent = k;
+    listEl.appendChild(h);
+    arr.forEach((it) => listEl.appendChild(renderCard(it)));
+  }
+}
+
+/* ---------- Views ---------- */
+function setView(view) {
+  state.view = view;
+  document.querySelectorAll(".tab").forEach((btn) => {
+    const active = btn.dataset.view === view;
+    btn.classList.toggle("is-active", active);
+    if (active) btn.setAttribute("aria-current", "page");
+    else btn.removeAttribute("aria-current");
+  });
+  render();
+}
+
+/* ---------- Quick Add / Edit ---------- */
+function initFilterOptions() {
+  const base = state.merged || state.base || {};
+  const pillars = pillarsList(base);
+  const owners = ownersList(base);
+
+  document.getElementById("filterPillar").innerHTML =
+    `<option value="any">All Pillars</option>` +
+    pillars
+      .map((p) => {
+        const code = p.code || p.id || p.pillar;
+        const label = safeText(p.name || p.label || code);
+        return `<option value="${code}">${label}</option>`;
+      })
+      .join("");
+
+  document.getElementById("filterOwner").innerHTML =
+    `<option value="any">All Owners</option>` +
+    owners
+      .map((o) => {
+        const id = o.owner_id || o.id;
+        const label = safeText(o.name || id);
+        return `<option value="${id}">${label}</option>`;
+      })
+      .join("");
+
+  const tasks = Array.isArray(base.tasks) ? base.tasks : [];
+  const months = uniq(tasks.map((t) => (t?.due_date || "").slice(0, 7)).filter(Boolean))
+    .sort()
+    .reverse();
+  document.getElementById("filterMonth").innerHTML =
+    `<option value="any">All Months</option>` +
+    months.map((m) => `<option value="${m}">${m}</option>`).join("");
+}
+
+function openQuickAdd() {
+  const base = state.merged || state.base || {};
+  const pillars = pillarsList(base);
+  const owners = ownersList(base);
+
+  document.getElementById("qaTitle").value = "";
+  document.getElementById("qaNotes").value = "";
+  document.getElementById("qaStart").value = "";
+  document.getElementById("qaDue").value = "";
+  document.getElementById("qaType").value = "task";
+  document.getElementById("qaPriority").value = "2";
+
+  document.getElementById("qaPillar").innerHTML =
+    `<option value="">—</option>` +
+    pillars
+      .map((p) => `<option value="${p.code || p.id || p.pillar}">${safeText(p.name || p.label || p.code)}</option>`)
+      .join("");
+  document.getElementById("qaOwner").innerHTML =
+    `<option value="">—</option>` +
+    owners
+      .map((o) => `<option value="${o.owner_id || o.id}">${safeText(o.name || o.owner_id || o.id)}</option>`)
+      .join("");
+
+  const aiSettings = loadAiSettings();
+  document.getElementById("qaAiRefine").checked = !!(aiSettings.enabled && aiSettings.autoRefine);
+
+  openSheet("quickAddSheet");
+  setTimeout(() => document.getElementById("qaTitle").focus(), 60);
+}
+
+function saveQuickAdd() {
+  const title = safeText(document.getElementById("qaTitle").value).trim();
+  if (!title) return toast("Title required");
+
+  const newId = `temp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+
+  const task = {
+    id: newId,
+    title,
+    notes: safeText(document.getElementById("qaNotes").value || ""),
+    start_date: document.getElementById("qaStart").value || null,
+    due_date: document.getElementById("qaDue").value || null,
+    type: document.getElementById("qaType").value || "task",
+    priority: Number(document.getElementById("qaPriority").value || 2),
+    pillar: document.getElementById("qaPillar").value || null,
+    owner_id: document.getElementById("qaOwner").value || null
+  };
+
+  state.overlays.new_tasks.push(task);
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+
+  closeSheet("quickAddSheet");
+  toast("Added");
+  render();
+
+  if (document.getElementById("qaAiRefine").checked) {
+    aiRefineTaskById(newId, { origin: "quick_add" });
+  }
+}
+
+function openEdit(id) {
+  const merged = state.merged || {};
+  const all = (merged.tasks || []).concat(merged.events || []);
+  const item = all.find((x) => x.id === id);
+  if (!item) return;
+
+  const base = state.merged || state.base || {};
+  const pillars = pillarsList(base);
+  const owners = ownersList(base);
+
+  document.getElementById("editId").value = id;
+  document.getElementById("editTitle").value = item.title || "";
+  document.getElementById("editNotes").value = item.notes || "";
+  document.getElementById("editStart").value = item.start_date || "";
+  document.getElementById("editDue").value = item.due_date || "";
+  document.getElementById("editType").value = normalizeType(item.type) || "";
+  document.getElementById("editPriority").value = (item.priority ?? "").toString();
+
+  document.getElementById("editPillar").innerHTML =
+    `<option value="">—</option>` +
+    pillars
+      .map((p) => {
+        const code = p.code || p.id || p.pillar;
+        const label = safeText(p.name || p.label || code);
+        return `<option value="${code}" ${code === item.pillar ? "selected" : ""}>${label}</option>`;
+      })
+      .join("");
+
+  document.getElementById("editOwner").innerHTML =
+    `<option value="">—</option>` +
+    owners
+      .map((o) => {
+        const oid = o.owner_id || o.id;
+        const label = safeText(o.name || oid);
+        return `<option value="${oid}" ${oid === item.owner_id ? "selected" : ""}>${label}</option>`;
+      })
+      .join("");
+
+  openSheet("editSheet");
+}
+
+function saveEdit() {
+  const id = document.getElementById("editId").value;
+  if (!id) return;
+
+  const patch = {
+    title: safeText(document.getElementById("editTitle").value).trim(),
+    notes: safeText(document.getElementById("editNotes").value || ""),
+    start_date: document.getElementById("editStart").value || null,
+    due_date: document.getElementById("editDue").value || null,
+    type: document.getElementById("editType").value || null,
+    priority: document.getElementById("editPriority").value
+      ? Number(document.getElementById("editPriority").value)
+      : null,
+    pillar: document.getElementById("editPillar").value || null,
+    owner_id: document.getElementById("editOwner").value || null
+  };
+
+  const idx = state.overlays.new_tasks.findIndex((t) => t.id === id);
+  if (idx !== -1) state.overlays.new_tasks[idx] = { ...state.overlays.new_tasks[idx], ...patch };
+  else Object.assign(ensurePatch(id), patch);
+
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  closeSheet("editSheet");
+  toast("Saved");
+  render();
+}
+
+/* ---------- Actions sheet ---------- */
+function openActions(id, title) {
+  state.actionId = id;
+  document.getElementById("actionTitle").textContent = safeText(title || id);
+  openSheet("actionSheet");
+}
+
+/* ---------- Export / Import ---------- */
+function exportOverlays() {
+  dlFile("overrides.json", JSON.stringify(state.overlays, null, 2));
+}
+function importOverlays() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json,application/json";
+  input.onchange = async (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const txt = await f.text();
+    try {
+      const obj = JSON.parse(txt);
+      state.overlays = { ...defaultOverlays(), ...obj };
+      saveOverlays(state.overlays);
+      state.merged = mergeData(state.base, state.overlays);
+      toast("Imported overlays");
+      render();
+    } catch {
+      toast("Invalid JSON");
+    }
+  };
+  input.click();
+}
+function backupMerged() {
+  dlFile("merged.json", JSON.stringify(state.merged, null, 2));
+}
+function resetOverlays() {
+  if (!confirm("Reset local overlays? This deletes completions, edits, and new tasks.")) return;
+  state.overlays = defaultOverlays();
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  toast("Reset");
+  render();
+}
+
+/* ===========================
+   AI: auto-apply safe ops (Mode B)
+   =========================== */
+
+function renderAiHint() {
+  const row = document.getElementById("aiHintRow");
+  const text = document.getElementById("aiHintText");
+  const ready = getAiReadyState();
+
+  if (!ready.enabled) {
+    row.hidden = true;
+    return;
+  }
+
+  if (state.pendingAiPayload) {
+    row.hidden = false;
+    text.textContent = state.pendingAiPayload.summary || "AI has suggestions ready.";
+    return;
+  }
+
+  row.hidden = true;
+}
+
+function showAiReview(payload) {
+  state.pendingAiPayload = payload;
+  document.getElementById("aiReviewSummary").textContent = payload.summary || "AI suggestions";
+  const list = document.getElementById("aiOpsList");
+  list.innerHTML =
+    (payload.ops || [])
+      .map(
+        (o) => `
+    <div class="ai-op">
+      <div class="ai-op__top">
+        <span class="ai-op__kind">${safeText(o.op)}</span>
+        <span class="muted small">${safeText(o.id)}</span>
+      </div>
+      <div class="muted small" style="margin-top:6px">${safeText(o.reason || "")}</div>
+      ${
+        o.fields
+          ? `<pre class="muted small" style="margin:8px 0 0;white-space:pre-wrap">${safeText(
+              JSON.stringify(o.fields, null, 2)
+            )}</pre>`
+          : ""
+      }
+    </div>
+  `
+      )
+      .join("") || `<div class="muted small">No operations returned.</div>`;
+
+  openSheet("aiReviewSheet");
+  renderAiHint();
+}
+
+function discardAi() {
+  state.pendingAiPayload = null;
+  closeSheet("aiReviewSheet");
+  renderAiHint();
+  toast("Discarded");
+}
+
+function applyOpsArray(ops) {
+  if (!Array.isArray(ops) || !ops.length) return 0;
+
+  for (const o of ops) {
+    if (o.op === "add") {
+      const id =
+        o.id && o.id.startsWith("temp_")
+          ? o.id
+          : `temp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+
+      const fields = o.fields || {};
+      state.overlays.new_tasks.push({
+        id,
+        title: safeText(fields.title || "Untitled"),
+        type: normalizeType(fields.type) || "task",
+        pillar: fields.pillar ?? null,
+        owner_id: fields.owner_id ?? null,
+        start_date: fields.start_date ?? null,
+        due_date: fields.due_date ?? null,
+        priority: fields.priority ?? 2,
+        notes: safeText(fields.notes || ""),
+        subtasks: Array.isArray(fields.subtasks) ? fields.subtasks : undefined,
+        estimated_minutes: fields.estimated_minutes ?? undefined,
+        energy: fields.energy ?? undefined
+      });
+    }
+
+    if (o.op === "update") {
+      Object.assign(ensurePatch(o.id), o.fields || {});
+    }
+
+    if (o.op === "complete") {
+      const patch = ensurePatch(o.id);
+      patch.status = "completed";
+      patch.completed_at = new Date().toISOString();
+      logComplete(o.id, true);
+    }
+
+    if (o.op === "undo_complete") {
+      const patch = ensurePatch(o.id);
+      patch.status = "open";
+      patch.completed_at = null;
+      logComplete(o.id, false);
+    }
+
+    if (o.op === "delete") {
+      if (!state.overlays.deletions.includes(o.id)) state.overlays.deletions.push(o.id);
+      delete state.overlays.task_overrides[o.id];
+      state.overlays.new_tasks = state.overlays.new_tasks.filter((t) => t.id !== o.id);
+    }
+  }
+
+  saveOverlays(state.overlays);
+  state.merged = mergeData(state.base, state.overlays);
+  return ops.length;
+}
+
+function applyAiOps(payload) {
+  const ops = payload?.ops || [];
+  if (!ops.length) return toast("No ops to apply");
+
+  applyOpsArray(ops);
+
+  state.pendingAiPayload = null;
+  closeSheet("aiReviewSheet");
+  renderAiHint();
+  toast("Applied AI suggestions");
+  render();
+}
+
+/**
+ * MODE B: auto-apply safe edits.
+ * Safe = update-only AND fields limited to a small allowlist, and no date changes/subtasks.
+ */
+function splitAiOpsForAutoApply(payload) {
+  const ops = Array.isArray(payload?.ops) ? payload.ops : [];
+  const safeFieldsAllow = new Set([
+    "title",
+    "notes",
+    "pillar",
+    "owner_id",
+    "priority",
+    "type",
+    "estimated_minutes",
+    "energy"
+  ]);
+
+  const autoOps = [];
+  const reviewOps = [];
+
+  for (const op of ops) {
+    if (!op || typeof op !== "object") continue;
+
+    if (op.op !== "update") {
+      reviewOps.push(op);
+      continue;
+    }
+
+    // Only allow updates to existing items (not temp adds)
+    if (typeof op.id !== "string" || op.id.startsWith("temp_")) {
+      // temp items can still be refined, but we treat as review so user sees what changed
+      reviewOps.push(op);
+      continue;
+    }
+
+    const fields = op.fields || {};
+    const keys = Object.keys(fields);
+
+    // Anything touching dates or subtasks must be reviewed
+    if (keys.includes("start_date") || keys.includes("due_date") || keys.includes("subtasks")) {
+      reviewOps.push(op);
+      continue;
+    }
+
+    // Must be only allowlisted fields
+    const allSafe = keys.every((k) => safeFieldsAllow.has(k));
+    if (!allSafe) {
+      reviewOps.push(op);
+      continue;
+    }
+
+    // “Safe enough” — auto apply
+    autoOps.push(op);
+  }
+
+  return { autoOps, reviewOps };
+}
+
+async function aiRefineTaskById(id, { origin = "manual" } = {}) {
+  const settings = loadAiSettings();
+  if (!settings.enabled) return toast("Enable AI in More");
+
+  const merged = state.merged || {};
+  const t = (merged.tasks || []).find((x) => x.id === id) || state.overlays.new_tasks.find((x) => x.id === id);
+  if (!t) return;
+
+  toast("AI refining…");
+
+  try {
+    const ctx = await buildAiContext(state.merged, state.overlays, { origin });
+    const payload = await runRefineTask({ task: t, context: ctx });
+
+    if (!payload || !Array.isArray(payload.ops)) {
+      toast("AI returned nothing usable");
+      return;
+    }
+
+    // Mode B split
+    const { autoOps, reviewOps } = splitAiOpsForAutoApply(payload);
+
+    let didAuto = 0;
+    if (autoOps.length) {
+      didAuto = applyOpsArray(autoOps);
+    }
+
+    if (reviewOps.length) {
+      // Show only review ops; summary updated to reflect auto-applied changes
+      const summaryBits = [];
+      if (didAuto) summaryBits.push(`${didAuto} safe tweak${didAuto === 1 ? "" : "s"} applied`);
+      summaryBits.push(`${reviewOps.length} change${reviewOps.length === 1 ? "" : "s"} to review`);
+      showAiReview({
+        summary: payload.summary ? `${payload.summary} · ${summaryBits.join(" · ")}` : summaryBits.join(" · "),
+        ops: reviewOps
+      });
+      return;
+    }
+
+    // Nothing to review: AI UI should disappear
+    state.pendingAiPayload = null;
+    closeSheet("aiReviewSheet");
+    renderAiHint();
+    toast(didAuto ? "Refined" : "No changes needed");
+    render();
+  } catch (e) {
+    console.error(e);
+    toast(`AI error: ${e.message || "failed"}`);
+  }
+}
+
+async function aiRebalanceToday() {
+  const settings = loadAiSettings();
+  if (!settings.enabled) return toast("Enable AI in More");
+
+  toast("AI rebalancing…");
+
+  try {
+    const ctx = await buildAiContext(state.merged, state.overlays, { origin: "rebalance_today" });
+
+    const today = todayLocalISO();
+    const open = decorateTasks(state.merged?.tasks || []).filter((t) => t.__status === "open");
+    const payload = await runRebalanceToday({ todayISO: today, tasks: open, context: ctx });
+
+    if (!payload || !Array.isArray(payload.ops)) {
+      toast("No rebalance suggestions");
+      return;
+    }
+
+    // Rebalance is date-moving by nature, so always review
+    showAiReview(payload);
+  } catch (e) {
+    console.error(e);
+    toast(`AI error: ${e.message || "failed"}`);
+  }
+}
+
+/* ---------- AI settings UI ---------- */
+function loadAiSettingsIntoUI() {
+  const s = loadAiSettings();
+  document.getElementById("aiEnabled").checked = !!s.enabled;
+  document.getElementById("aiAutoRefine").checked = !!s.autoRefine;
+  document.getElementById("aiProvider").value = s.provider || "openai";
+  document.getElementById("aiModel").value = s.model || "";
+  document.getElementById("aiEndpoint").value = s.endpoint || "";
+  document.getElementById("aiHeaders").value = s.headersJson || "";
+  document.getElementById("aiRememberKey").checked = !!s.rememberKey;
+  document.getElementById("aiKey").value = s.rememberKey ? s.apiKey || "" : "";
+}
+
+/* ---------- Wiring ---------- */
+function wireUI() {
+  document.querySelectorAll(".tab").forEach((btn) =>
+    btn.addEventListener("click", () => setView(btn.dataset.view))
+  );
+
+  document.getElementById("filterPillar").addEventListener("change", (e) => {
+    state.filters.pillar = e.target.value;
+    render();
+  });
+  document.getElementById("filterOwner").addEventListener("change", (e) => {
+    state.filters.owner_id = e.target.value;
+    render();
+  });
+  document.getElementById("filterMonth").addEventListener("change", (e) => {
+    state.filters.month = e.target.value;
+    render();
+  });
+  document.getElementById("filterStatus").addEventListener("change", (e) => {
+    state.filters.status = e.target.value;
+    render();
+  });
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    state.filters.q = e.target.value;
+    render();
+  });
+  document.getElementById("sortBy").addEventListener("change", (e) => {
+    state.sort = e.target.value;
+    render();
+  });
+
+  const filterbar = document.getElementById("filterbar");
+  document.getElementById("btnToggleFilters").addEventListener("click", () => {
+    filterbar.hidden = !filterbar.hidden;
+  });
+
+  document.getElementById("btnZen").addEventListener("click", () => {
+    state.zen = !state.zen;
+    toast(state.zen ? "Zen mode" : "Standard mode");
+    render();
+  });
+
+  document.getElementById("btnMore").addEventListener("click", () => {
+    loadAiSettingsIntoUI();
+    openSheet("moreSheet");
+  });
+
+  document.getElementById("btnRebalance").addEventListener("click", aiRebalanceToday);
+
+  // Close sheets
+  document.querySelectorAll("[data-close]").forEach((el) =>
+    el.addEventListener("click", () => closeSheet(el.dataset.close))
+  );
+
+  // FAB / Quick add
+  document.getElementById("fab").addEventListener("click", openQuickAdd);
+  document.getElementById("btnQuickAdd").addEventListener("click", openQuickAdd);
+  document.getElementById("btnQaSave").addEventListener("click", saveQuickAdd);
+
+  // Edit save / delete
+  document.getElementById("btnEditSave").addEventListener("click", saveEdit);
+  document.getElementById("btnDelete").addEventListener("click", () => {
+    const id = document.getElementById("editId").value;
+    if (!id) return;
+    if (!confirm("Delete this item? (Stored as deletion overlay.)")) return;
+    closeSheet("editSheet");
+    deleteItem(id);
+  });
+
+  document.getElementById("btnEditMoveToday").addEventListener("click", () => {
+    const id = document.getElementById("editId").value;
+    if (!id) return;
+    moveToToday(id, "edit_move_today");
+    closeSheet("editSheet");
+  });
+
+  document.getElementById("btnEditAiRefine").addEventListener("click", async () => {
+    const id = document.getElementById("editId").value;
+    if (!id) return;
+    closeSheet("editSheet");
+    await aiRefineTaskById(id, { origin: "edit_refine" });
+  });
+
+  // Action sheet buttons
+  document.getElementById("btnActionComplete").addEventListener("click", () => {
+    if (!state.actionId) return;
+    toggleComplete(state.actionId);
+    closeSheet("actionSheet");
+  });
+  document.getElementById("btnActionEdit").addEventListener("click", () => {
+    if (!state.actionId) return;
+    closeSheet("actionSheet");
+    openEdit(state.actionId);
+  });
+  document.getElementById("btnActionToday").addEventListener("click", () => {
+    if (!state.actionId) return;
+    moveToToday(state.actionId, "longpress_today");
+    closeSheet("actionSheet");
+  });
+  document.getElementById("btnActionDefer").addEventListener("click", () => {
+    if (!state.actionId) return;
+    deferOneDay(state.actionId);
+    closeSheet("actionSheet");
+  });
+  document.getElementById("btnActionAiRefine").addEventListener("click", async () => {
+    if (!state.actionId) return;
+    closeSheet("actionSheet");
+    await aiRefineTaskById(state.actionId, { origin: "longpress_refine" });
+  });
+
+  // Inbox capture
+  const inboxInput = document.getElementById("inboxInput");
+  document.getElementById("btnInboxAdd").addEventListener("click", () => {
+    const v = inboxInput.value.trim();
+    if (!v) return;
+
+    const newId = `temp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+    state.overlays.new_tasks.push({
+      id: newId,
+      title: v,
+      type: "task",
+      priority: 2,
+      notes: "",
+      start_date: null,
+      due_date: null,
+      pillar: null,
+      owner_id: null
+    });
+
+    inboxInput.value = "";
+    saveOverlays(state.overlays);
+    state.merged = mergeData(state.base, state.overlays);
+    toast("Inbox captured");
+    render();
+
+    const ai = loadAiSettings();
+    if (ai.enabled && ai.autoRefine) aiRefineTaskById(newId, { origin: "inbox_capture" });
+  });
+  inboxInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("btnInboxAdd").click();
+  });
+
+  // Export / import
+  document.getElementById("btnExportOverlays").addEventListener("click", exportOverlays);
+  document.getElementById("btnImportOverlays").addEventListener("click", importOverlays);
+  document.getElementById("btnBackupMerged").addEventListener("click", backupMerged);
+  document.getElementById("btnResetOverlays").addEventListener("click", resetOverlays);
+
+  // AI hint
+  document.getElementById("btnAiHintOpen").addEventListener("click", () => openSheet("aiReviewSheet"));
+
+  // AI review
+  document.getElementById("btnAiDiscard").addEventListener("click", discardAi);
+  document.getElementById("btnAiApply").addEventListener("click", () => {
+    if (!state.pendingAiPayload) return discardAi();
+    if (!confirm("Apply these AI suggestions to overlays?")) return;
+    applyAiOps(state.pendingAiPayload);
+  });
+
+  // AI settings save/clear
+  document.getElementById("btnAiSaveSettings").addEventListener("click", () => {
+    const enabled = document.getElementById("aiEnabled").checked;
+    const autoRefine = document.getElementById("aiAutoRefine").checked;
+    const provider = document.getElementById("aiProvider").value;
+    const model = document.getElementById("aiModel").value.trim();
+    const endpoint = document.getElementById("aiEndpoint").value.trim();
+    const headersJson = document.getElementById("aiHeaders").value.trim();
+    const rememberKey = document.getElementById("aiRememberKey").checked;
+    const apiKey = document.getElementById("aiKey").value;
+
+    saveAiSettings({
+      enabled,
+      autoRefine,
+      provider,
+      model,
+      endpoint,
+      headersJson,
+      rememberKey,
+      apiKey: rememberKey ? apiKey : ""
+    });
+    toast("AI settings saved");
+    closeSheet("moreSheet");
+    renderAiHint();
+  });
+
+  document.getElementById("btnAiClearSettings").addEventListener("click", () => {
+    clearAiSettings();
+    loadAiSettingsIntoUI();
+    toast("AI settings cleared");
+    renderAiHint();
+  });
+
+  // Escape closes
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    ["editSheet", "quickAddSheet", "moreSheet", "actionSheet", "aiReviewSheet"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el && !el.hidden) el.hidden = true;
+    });
+  });
+}
+
+/* ---------- Boot ---------- */
+async function boot() {
+  wireUI();
+  updateStorageInfo(state.overlays);
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  }
+
+  try {
+    state.base = await loadBase();
+    updateMetaLine();
+    state.merged = mergeData(state.base, state.overlays);
+    initFilterOptions();
+    render();
+  } catch (e) {
+    console.error(e);
+    toast("Could not load tasks.json");
+    document.getElementById("list").innerHTML = `<div class="muted" style="padding:18px 6px">
+        <strong>Could not load tasks.json</strong><br>
+        Host via http:// (not file://). tasks.json must be in the same folder.
+      </div>`;
+  }
+}
+boot();
+
+</script>
+</body>
+</html>
